@@ -1,0 +1,28 @@
+# Maven build
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/logs/
+
+# IntelliJ / IDE
+*.iml
+.idea/
+out/
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+application.properties
+application.yml
+
+# Java
+*.jar
+*.war
+*.ear
