@@ -38,8 +38,8 @@ const FarmerDashboard = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const [farmerProfile, setFarmerProfile] = useState({
-    name: 'Rajesh Kumar',
-    email: 'rajesh.kumar@farm.com',
+    name: 'Naved',
+    email: 'naved@farm.com',
     phone: '+91 98765 43210',
     farmName: 'Green Valley Farms',
     location: 'Kovilpatti, Tamil Nadu',

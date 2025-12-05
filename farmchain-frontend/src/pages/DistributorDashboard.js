@@ -24,12 +24,12 @@ const DistributorDashboard = () => {
   const [notifications, setNotifications] = useState([]); // you can fetch notifications from backend later
 
   const [userProfile] = useState({
-    name: 'Rajesh Kumar',
-    email: 'rajesh@distributor.com',
+    name: 'Naved',
+    email: 'naved@distributor.com',
     phone: '+91 98765 43210',
     company: 'Fresh Logistics Ltd',
     role: 'Distribution Manager',
-    avatar: 'RK'
+    avatar: 'NK'
   });
 
   const [searchTerm, setSearchTerm] = useState('');
