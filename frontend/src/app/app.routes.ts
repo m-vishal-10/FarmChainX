@@ -47,6 +47,19 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/my-products/my-products').then((m) => m.MyProducts),
   },
 
+  // FARMER ROUTES
+  {
+    path: 'farmer',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/farmer/farmer-dashboard/farmer-dashboard').then(m => m.FarmerDashboard)
+      },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
+
   // CONSUMER ROUTES
   {
     path: 'consumer',
@@ -281,6 +294,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/retailer/provenance-viewer/provenance-viewer.component').then(
             (m) => m.ProvenanceViewerComponent
+          ),
+      },
+      {
+        path: 'market',
+        loadComponent: () =>
+          import('./pages/retailer/distributor-market/distributor-market.component').then(
+            (m) => m.DistributorMarketComponent
           ),
       },
     ],

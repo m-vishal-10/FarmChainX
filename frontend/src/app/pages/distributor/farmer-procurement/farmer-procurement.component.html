@@ -1,34 +1,113 @@
-<div class="bg-white p-6 rounded-xl shadow">
-  <h2 class="text-xl font-bold mb-4">Farmer Procurement</h2>
+<div class="min-h-screen bg-gray-50 pb-12">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h1 class="text-3xl font-bold">Farmer Marketplace</h1>
+      <p class="mt-2 text-emerald-100">Live feed of verified crops available for procurement</p>
+    </div>
+  </div>
 
-  <table class="w-full border-collapse">
-    <thead class="text-sm text-slate-500 border-b">
-      <tr>
-        <th class="text-left py-2">Farmer</th>
-        <th>Crop</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of procurements" class="border-b hover:bg-slate-50">
-        <td class="py-2">{{ p.farmer }}</td>
-        <td>{{ p.crop }}</td>
-        <td>{{ p.quantity }}</td>
-        <td>{{ p.price }}</td>
-        <td>
-          <span
-            class="px-2 py-1 rounded text-xs"
-            [ngClass]="{
-              'bg-yellow-100 text-yellow-700': p.status === 'Pending',
-              'bg-green-100 text-green-700': p.status !== 'Pending'
-            }"
-          >
-            {{ p.status }}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+
+    <!-- Filters (Mock) -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-8 flex flex-wrap gap-4 items-center">
+      <span class="font-semibold text-gray-700">Filter By:</span>
+      <select class="form-select text-sm border-gray-300 rounded-lg">
+        <option>All Crops</option>
+        <option>Wheat</option>
+        <option>Rice</option>
+        <option>Corn</option>
+      </select>
+      <select class="form-select text-sm border-gray-300 rounded-lg">
+        <option>Any Quality</option>
+        <option>Grade A Only</option>
+      </select>
+      <div class="ml-auto">
+        <span class="text-xs text-gray-500">Showing {{ availableCrops.length }} active listings</span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-emerald-500 border-t-transparent"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && availableCrops.length === 0"
+      class="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
+      <p class="text-xl text-gray-500">No crops available in the marketplace currently.</p>
+    </div>
+
+    <!-- Grid -->
+    <div *ngIf="!loading && availableCrops.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div *ngFor="let crop of availableCrops"
+        class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group">
+
+        <!-- Image Section -->
+        <div class="relative h-48 bg-gray-200">
+          <img *ngIf="crop.imagePath" [src]="'http://localhost:8080' + crop.imagePath"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <div *ngIf="!crop.imagePath" class="w-full h-full flex items-center justify-center text-4xl">🌱</div>
+
+          <div class="absolute top-3 right-3 bg-white/90 backdrop-blur rounded-lg px-2 py-1 shadow text-xs font-bold">
+            Batch #{{ crop.id }}
+          </div>
+
+          <!-- Quality Badge -->
+          <div
+            class="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-white/95 shadow-sm nav-link"
+            [ngClass]="{'text-emerald-700': crop.qualityGrade?.includes('A'), 'text-yellow-700': crop.qualityGrade?.includes('B')}">
+            AI Grade: {{ crop.qualityGrade || 'Pending' }}
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-gray-900">{{ crop.cropName }}</h3>
+              <p class="text-sm text-gray-500 flex items-center gap-1">
+                📍 {{ crop.gpsLocation || 'Unknown Location' }}
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-gray-500">Est. Price</p>
+              <p class="text-lg font-bold text-emerald-600">₹{{ estimatePrice(crop) | number }}</p>
+            </div>
+          </div>
+
+          <div class="space-y-2 text-sm text-gray-600 mb-6">
+            <div class="flex justify-between border-b border-gray-100 pb-2">
+              <span>Harvest Date</span>
+              <span class="font-medium">{{ crop.harvestDate | date }}</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-100 pb-2">
+              <span>Soil Type</span>
+              <span class="font-medium">{{ crop.soilType || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Verification</span>
+              <span class="flex items-center gap-1 text-emerald-600 font-medium">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                Verified
+              </span>
+            </div>
+          </div>
+
+          <!-- Action -->
+          <button (click)="buyCrop(crop)" [disabled]="buyingId === crop.id"
+            class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <span *ngIf="buyingId !== crop.id">Buy Now</span>
+            <span *ngIf="buyingId === crop.id" class="animate-pulse">Processing...</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

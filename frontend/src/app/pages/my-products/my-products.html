@@ -1,239 +1,324 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-slate-50">
+   
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-    <!-- Page Title & Stats -->
+           
     <div class="mb-8 lg:mb-12">
+           
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+               
         <div>
+                   
           <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-2">My Registered Products</h2>
+                   
           <p class="text-slate-600">
-            Track and manage your Database-verified agricultural products
+                        Track and manage your Database-verified agricultural products          
           </p>
+                 
         </div>
+               
         <div class="flex gap-4">
+                   
           <div class="bg-white rounded-xl shadow-sm border border-slate-200 px-6 py-3">
+                       
             <p class="text-xs text-slate-500 uppercase tracking-wide">Total Products</p>
+                       
             <p class="text-2xl font-bold text-emerald-600">{{ totalItems || 0 }}</p>
+                     
           </div>
+                   
           <div class="bg-white rounded-xl shadow-sm border border-slate-200 px-6 py-3">
+                       
             <p class="text-xs text-slate-500 uppercase tracking-wide">Verified</p>
+                       
             <p class="text-2xl font-bold text-teal-600">{{ products.length }}</p>
+                     
           </div>
+                 
         </div>
+             
       </div>
+         
     </div>
 
-    <!-- Loading State -->
+           
     <div *ngIf="loading" class="flex flex-col items-center justify-center py-20">
+           
       <div class="relative">
+               
         <div
           class="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"
         ></div>
+               
         <div class="absolute inset-0 flex items-center justify-center text-2xl">🌾</div>
+             
       </div>
+           
       <p class="mt-6 text-lg font-medium text-slate-600">Loading your products...</p>
+         
     </div>
 
-    <!-- Retry Message -->
+           
     <div *ngIf="retryMessage" class="mb-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+           
       <div class="flex items-center gap-3">
-        <span class="text-2xl">⚠️</span>
+                <span class="text-2xl">⚠️</span>        
         <p class="text-amber-800 font-medium">{{ retryMessage }}</p>
+             
       </div>
+         
     </div>
 
-    <!-- Empty State -->
+           
     <div
       *ngIf="!loading && products.length === 0"
       class="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center"
     >
+           
       <div class="max-w-md mx-auto">
+               
         <div
           class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6"
         >
-          <span class="text-5xl">📦</span>
+                    <span class="text-5xl">📦</span>        
         </div>
+               
         <h3 class="text-2xl font-bold text-slate-800 mb-3">No Products Registered Yet</h3>
+               
         <p class="text-slate-600 mb-6">
-          Start by registering your first agricultural product to enable Database-verified
-          traceability.
+                    Start by registering your first agricultural product to enable Database-verified
+                    traceability.        
         </p>
+               
         <button
           class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold px-8 py-3 rounded-lg hover:shadow-lg transition-all"
         >
-          Register First Product
+                    Register First Product        
         </button>
+             
       </div>
+         
     </div>
 
-    <!-- Products Grid -->
+           
     <div
       *ngIf="!loading && products.length > 0"
       class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8"
     >
+           
       <div
         *ngFor="let p of products"
+        [attr.data-product-id]="p.id"
         class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:border-emerald-300 transition-all duration-300 group"
       >
-        <!-- Product Image Section -->
+                       
         <div class="relative h-48 bg-gradient-to-br from-emerald-100 to-teal-100 overflow-hidden">
+                   
           <img
             *ngIf="p.imagePath"
             [src]="getImageUrl(p.imagePath)"
             [alt]="p.cropName"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
+                   
           <div *ngIf="!p.imagePath" class="w-full h-full flex items-center justify-center text-7xl">
-            {{ getCropEmoji(p.cropName) }}
+                        {{ getCropEmoji(p.cropName) }}          
           </div>
 
-          <!-- Quality Badge Overlay -->
+                             
           <div
             class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-lg border border-emerald-200"
           >
+                       
             <div class="flex items-center gap-2">
+                           
               <span class="text-2xl font-black text-emerald-600">{{ p.qualityGrade || 'A+' }}</span>
+                           
               <div class="text-xs">
+                               
                 <p class="font-bold text-slate-800">AI Graded</p>
+                               
                 <p class="text-slate-500">{{ p.confidenceScore | number : '1.0-0' }}%</p>
+                             
               </div>
+                         
             </div>
+                     
           </div>
 
-          <!-- Verified Badge -->
+                             
           <div
             class="absolute top-3 left-3 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg"
           >
-            <span>✓</span> Database Verified
+                        <span>✓</span> Database Verified          
           </div>
+                 
         </div>
 
-        <!-- Product Details -->
+                       
         <div class="p-6">
-          <!-- Crop Name & Emoji -->
+                             
           <div class="flex items-center gap-3 mb-4">
-            <span class="text-4xl">{{ getCropEmoji(p.cropName) }}</span>
+                        <span class="text-4xl">{{ getCropEmoji(p.cropName) }}</span>            
             <div class="flex-1">
+                           
               <h3 class="text-xl font-bold text-slate-800">{{ p.cropName | titlecase }}</h3>
+                           
               <p class="text-sm text-slate-500">Harvest: {{ formatDate(p.harvestDate) }}</p>
+                         
             </div>
+                     
           </div>
 
-          <!-- Divider -->
+                             
           <div class="border-t border-slate-100 my-4"></div>
 
-          <!-- Product Info Grid -->
+                             
           <div class="grid grid-cols-2 gap-4 mb-4">
+                       
             <div>
+                           
               <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Registered By</p>
+                           
               <p class="text-sm font-semibold text-slate-800">{{ p.farmer?.name || 'You' }}</p>
+                         
             </div>
+                       
             <div>
+                           
               <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Product ID</p>
+                           
               <p class="text-sm font-mono text-slate-800">#{{ p.id }}</p>
+                         
             </div>
+                     
           </div>
 
-          <!-- QR Code Section -->
+                             
           <div class="bg-slate-50 rounded-xl p-4 mb-4">
+                       
             <div class="flex items-center justify-between mb-3">
+                           
               <span class="text-xs font-semibold text-slate-700 uppercase tracking-wide"
                 >QR Verification</span
               >
+                           
               <span
                 *ngIf="p.qrCodePath"
                 class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600"
               >
-                <span class="w-2 h-2 bg-emerald-600 rounded-full animate-pulse"></span> Active
+                               
+                <span class="w-2 h-2 bg-emerald-600 rounded-full animate-pulse"></span> Active      
+                       
               </span>
+                           
               <span *ngIf="!p.qrCodePath" class="text-xs font-bold text-slate-400"
                 >Not Generated</span
               >
+                         
             </div>
 
-            <!-- QR Code Preview -->
+                                   
             <div *ngIf="p.qrCodePath" class="bg-white rounded-lg p-3 border border-slate-200">
+                           
               <img
                 [src]="getQrUrl(p.qrCodePath)"
                 alt="QR Code"
                 class="w-full max-w-[120px] mx-auto"
               />
+                           
               <p class="text-center text-xs text-slate-500 mt-2">Scan to verify authenticity</p>
+                         
             </div>
 
-            <!-- Generate QR Placeholder -->
+                                   
             <div
               *ngIf="!p.qrCodePath"
               class="bg-slate-100 rounded-lg p-6 text-center border-2 border-dashed border-slate-300"
             >
-              <span class="text-4xl opacity-50">📱</span>
+                            <span class="text-4xl opacity-50">📱</span>              
               <p class="text-xs text-slate-500 mt-2">Generate QR code for verification</p>
+                         
             </div>
+                     
           </div>
 
-          <!-- Action Buttons -->
+                             
           <div class="space-y-2">
+                       
             <button
               *ngIf="!p.qrCodePath"
               (click)="generateQr(p.id); $event.preventDefault(); $event.stopPropagation()"
               type="button"
               class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2"
             >
-              <span class="text-lg">⚡</span>
-              Generate QR Code
+                            <span class="text-lg">⚡</span>               Generate QR Code          
+               
             </button>
 
+                       
             <div *ngIf="p.qrCodePath" class="grid grid-cols-2 gap-2">
+                           
               <button
                 (click)="downloadQr(p.id); $event.preventDefault()"
                 type="button"
                 class="bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2"
               >
-                <span class="text-lg">⬇️</span>
-                Download
+                                <span class="text-lg">⬇️</span>                 Download            
+                 
               </button>
 
+                           
               <button
                 (click)="viewQr(p.qrCodePath); $event.preventDefault()"
                 type="button"
                 class="bg-slate-700 text-white font-semibold py-3 rounded-lg hover:bg-slate-800 transition-all text-sm flex items-center justify-center gap-2"
               >
-                <span class="text-lg">👁️</span>
-                View
+                                <span class="text-lg">👁️</span>                 View              
               </button>
+                         
             </div>
+                     
           </div>
+                 
         </div>
+             
       </div>
+         
     </div>
 
-    <!-- Pagination -->
+           
     <div
       *ngIf="!loading && totalPages > 1"
       class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-xl shadow-sm border border-slate-200 p-6"
     >
+           
       <button
         (click)="prevPage()"
         [disabled]="page === 0"
         class="px-6 py-2.5 bg-slate-100 text-slate-700 font-semibold rounded-lg hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
-        ← Previous
+                ← Previous      
       </button>
 
+           
       <div class="flex items-center gap-4">
-        <span class="text-sm text-slate-600">Page</span>
+                <span class="text-sm text-slate-600">Page</span>        
         <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-lg">{{
           page + 1
         }}</span>
-        <span class="text-sm text-slate-600">of {{ totalPages }}</span>
+                <span class="text-sm text-slate-600">of {{ totalPages }}</span>      
       </div>
 
+           
       <button
         (click)="nextPage()"
         [disabled]="page >= totalPages - 1"
         class="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-lg hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all"
       >
-        Next →
+                Next →      
       </button>
+         
     </div>
+     
   </main>
 </div>

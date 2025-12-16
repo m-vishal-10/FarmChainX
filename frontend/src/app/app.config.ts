@@ -1,13 +1,19 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideZoneChangeDetection } from '@angular/core';
+// src/app/app.config.ts
+
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+// Import 'withInterceptors' and your interceptor
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
+import { JwtInterceptor } from './interceptors/jwt.interceptor'; // <-- 1. Import your Interceptor
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(), // Add this for HttpClient
+    // 2. Update provideHttpClient to include the interceptor
+    provideHttpClient(
+      withInterceptors([JwtInterceptor]) // <-- Registration goes here
+    ),
   ],
 };

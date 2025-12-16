@@ -1,13 +1,12 @@
-// src/app/pages/retailer/retailer-dashboard/retailer-dashboard.component.ts
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
-  selector: 'app-retailer-dashboard',
+  imports: [CommonModule, RouterModule],
   templateUrl: './retailer-dashboard.component.html',
 })
 export class RetailerDashboardComponent implements AfterViewInit {

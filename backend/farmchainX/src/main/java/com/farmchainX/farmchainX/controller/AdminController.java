@@ -31,21 +31,25 @@ public class AdminController {
     private final RoleRepository roleRepo;
     private final AdminPromotionService promotionService;
 
-    record NestedUser(String name, String email) {}
+    record NestedUser(String name, String email) {
+
+    }
+
     record PromotionRequestView(Long id, LocalDateTime requestedAt, NestedUser user) {
+
         static PromotionRequestView from(AdminPromotionRequest r) {
             return new PromotionRequestView(
-                r.getId(),
-                r.getRequestedAt(),
-                new NestedUser(r.getUser().getName(), r.getUser().getEmail())
+                    r.getId(),
+                    r.getRequestedAt(),
+                    new NestedUser(r.getUser().getName(), r.getUser().getEmail())
             );
         }
     }
 
     public AdminController(AdminOverviewService overviewService,
-                           UserRepository userRepo,
-                           RoleRepository roleRepo,
-                           AdminPromotionService promotionService) {
+            UserRepository userRepo,
+            RoleRepository roleRepo,
+            AdminPromotionService promotionService) {
         this.overviewService = overviewService;
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
@@ -61,7 +65,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/promote/{userId}")
     public String promoteToAdmin(@PathVariable Long userId,
-                                 @AuthenticationPrincipal UserDetails principal) {
+            @AuthenticationPrincipal UserDetails principal) {
         User target = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (principal != null && principal.getUsername().equalsIgnoreCase(target.getEmail())) {
@@ -102,7 +106,7 @@ public class AdminController {
     @PostMapping("/promotion-requests/{requestId}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public List<PromotionRequestView> approveRequest(@PathVariable Long requestId,
-                                                     Authentication auth) {
+            Authentication auth) {
         User admin = userRepo.findByEmail(auth.getName()).orElseThrow();
         promotionService.approveRequest(requestId, admin);
         return promotionService.getPendingRequests().stream().map(PromotionRequestView::from).toList();

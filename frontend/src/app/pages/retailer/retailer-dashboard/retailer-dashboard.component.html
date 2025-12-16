@@ -1,80 +1,157 @@
-<!-- src/app/pages/retailer/retailer-dashboard/retailer-dashboard.component.html -->
-<div class="max-w-7xl mx-auto p-4 sm:p-6">
-  <div class="flex justify-between items-center mb-6 border-b border-slate-200 pb-4">
-    <h1 class="text-3xl font-bold">Retailer Dashboard</h1>
-    <div class="flex items-center gap-3">
-      <button (click)="refresh()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">
-        Refresh
-      </button>
-      <button (click)="export()" class="px-4 py-2 bg-emerald-100 rounded-lg">Export</button>
+<div class="min-h-screen bg-gray-50 pb-12">
+  <!-- Header -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Retailer Dashboard</h1>
+          <p class="mt-1 text-gray-500">Store overview and supply chain analytics</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">
+            Export Data
+          </button>
+          <button
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
+            + New Order
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    <div class="p-6 bg-white rounded-2xl shadow">
-      <h4 class="text-sm text-slate-500">Current Inventory Value</h4>
-      <p class="text-2xl font-bold mt-2">₹ {{ inventoryValue | number }}</p>
-      <p class="text-xs text-slate-400 mt-1">Last 30 days</p>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Stat 1 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative overflow-hidden group">
+        <div class="relative z-10">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Inventory Value</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2">₹{{ inventoryValue | number }}</p>
+          <p class="text-xs text-emerald-600 mt-1 font-medium">↑ 5% from last week</p>
+        </div>
+        <div
+          class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-emerald-100 to-transparent rounded-bl-full opacity-50 group-hover:scale-110 transition-transform">
+        </div>
+      </div>
+
+      <!-- Stat 2 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative overflow-hidden group">
+        <div class="relative z-10">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Open Orders</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2">{{ openPOs }}</p>
+          <p class="text-xs text-blue-600 mt-1 font-medium">Awaiting delivery</p>
+        </div>
+        <div
+          class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-blue-100 to-transparent rounded-bl-full opacity-50 group-hover:scale-110 transition-transform">
+        </div>
+      </div>
+
+      <!-- Stat 3 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative overflow-hidden group">
+        <div class="relative z-10">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Incoming Shipments</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2">{{ incomingShipments }}</p>
+          <p class="text-xs text-indigo-600 mt-1 font-medium">Arriving soon</p>
+        </div>
+        <div
+          class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-indigo-100 to-transparent rounded-bl-full opacity-50 group-hover:scale-110 transition-transform">
+        </div>
+      </div>
+
+      <!-- Stat 4 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative overflow-hidden group">
+        <div class="relative z-10">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Low Stock Alert</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2 text-red-600">{{ lowStock }}</p>
+          <p class="text-xs text-red-500 mt-1 font-medium">Items need reorder</p>
+        </div>
+        <div
+          class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-red-100 to-transparent rounded-bl-full opacity-50 group-hover:scale-110 transition-transform">
+        </div>
+      </div>
     </div>
 
-    <div class="p-6 bg-white rounded-2xl shadow">
-      <h4 class="text-sm text-slate-500">Open Purchase Orders</h4>
-      <p class="text-2xl font-bold mt-2">{{ openPOs }}</p>
-      <p class="text-xs text-slate-400 mt-1">Awaiting confirmation</p>
+    <!-- Charts & Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Main Chart -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-gray-900">Sales Trends</h3>
+          <select class="text-sm border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+            <option>This Week</option>
+            <option>This Month</option>
+          </select>
+        </div>
+        <div class="h-64">
+          <canvas #barChart></canvas>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Pie -->
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 class="font-bold text-gray-900 mb-4">Stock Distribution</h3>
+          <div class="h-48 flex justify-center">
+            <canvas #pieChart></canvas>
+          </div>
+        </div>
+
+        <!-- CTA Card -->
+        <div
+          class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+          <div class="relative z-10">
+            <h3 class="font-bold text-xl mb-1">Buy from Distributors</h3>
+            <p class="text-indigo-100 text-sm mb-4">Browse the wholesale market for certified crops.</p>
+            <a routerLink="/retailer/market"
+              class="inline-block bg-white text-indigo-700 font-bold py-2 px-4 rounded-lg hover:bg-indigo-50 transition-colors text-sm">
+              Go to Market →
+            </a>
+          </div>
+          <div class="absolute right-0 bottom-0 text-8xl opacity-10">🛍️</div>
+        </div>
+      </div>
     </div>
 
-    <div class="p-6 bg-white rounded-2xl shadow">
-      <h4 class="text-sm text-slate-500">Incoming Shipments</h4>
-      <p class="text-2xl font-bold mt-2">{{ incomingShipments }}</p>
-      <p class="text-xs text-slate-400 mt-1">ETA within 48 hours</p>
+    <!-- Recent Orders Table -->
+    <div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+        <h3 class="font-bold text-gray-700">Recent Purchase Orders</h3>
+        <a href="#" class="text-sm text-indigo-600 font-semibold hover:text-indigo-800">View All</a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Order ID</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Supplier</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Items
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let o of recentOrders" class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ o.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ o.supplier }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ o.items }} items</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">₹{{ o.total }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  [ngClass]="statusClass(o.status)">
+                  {{ o.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="p-6 bg-white rounded-2xl shadow">
-      <h4 class="text-sm text-slate-500">Low Stock Items</h4>
-      <p class="text-2xl font-bold mt-2">{{ lowStock }}</p>
-      <p class="text-xs text-slate-400 mt-1">Needs reorder</p>
-    </div>
-  </div>
-
-  <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="col-span-2 bg-white rounded-2xl p-6 shadow">
-      <h3 class="font-semibold mb-4">Sales - Last 7 days</h3>
-      <canvas #barChart></canvas>
-    </div>
-
-    <div class="bg-white rounded-2xl p-6 shadow">
-      <h3 class="font-semibold mb-4">Stock Distribution</h3>
-      <canvas #pieChart></canvas>
-    </div>
-  </div>
-
-  <div class="mt-8 bg-white rounded-2xl p-6 shadow">
-    <h3 class="font-semibold mb-4">Recent Orders</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left table-auto">
-        <thead>
-          <tr class="text-slate-500 text-xs uppercase">
-            <th class="px-4 py-2">Order ID</th>
-            <th class="px-4 py-2">Supplier</th>
-            <th class="px-4 py-2">Items</th>
-            <th class="px-4 py-2">Total</th>
-            <th class="px-4 py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let o of recentOrders" class="border-t">
-            <td class="px-4 py-3">{{ o.id }}</td>
-            <td class="px-4 py-3">{{ o.supplier }}</td>
-            <td class="px-4 py-3">{{ o.items }} items</td>
-            <td class="px-4 py-3">₹ {{ o.total }}</td>
-            <td class="px-4 py-3">
-              <span class="px-3 py-1 rounded-full text-xs" [ngClass]="statusClass(o.status)">{{
-                o.status
-              }}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>

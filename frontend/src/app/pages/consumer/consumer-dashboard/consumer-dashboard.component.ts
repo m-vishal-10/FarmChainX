@@ -1,18 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Chart, registerables } from 'chart.js';
 
-interface Purchase {
-  name: string;
-  purchaseDate: string;
-  type: string;
-  status: string;
-}
-
-interface ChartData {
-  monthly: { month: string; height: number; value: number }[];
-  categories: { name: string; value: number; color: string }[];
-}
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-consumer-dashboard',
@@ -20,60 +11,63 @@ interface ChartData {
   imports: [CommonModule, RouterModule],
   templateUrl: './consumer-dashboard.component.html',
 })
-export class ConsumerDashboardComponent implements OnInit {
+export class ConsumerDashboardComponent implements AfterViewInit {
+  @ViewChild('spendChart') spendChartRef!: ElementRef;
+
   userProfile = {
     name: 'Subhash Kumawat',
     memberSince: 'Jan 2024',
     location: 'Rajasthan, India',
+    ecoPoints: 450
   };
 
-  totalProducts = 120;
-  verifiedProducts = 95;
-  traceabilityChecks = 85;
-  pendingFeedback = 10;
-
-  // Horizontal bar chart colors
-  barColors = ['#34D399', '#3B82F6', '#F59E0B', '#8B5CF6', '#F97316', '#10B981'];
-
-  chartData: ChartData = {
-    monthly: [
-      { month: 'Jul', height: 45, value: 45 },
-      { month: 'Aug', height: 60, value: 60 },
-      { month: 'Sep', height: 55, value: 55 },
-      { month: 'Oct', height: 75, value: 75 },
-      { month: 'Nov', height: 65, value: 65 },
-      { month: 'Dec', height: 90, value: 90 },
-    ],
-    categories: [
-      { name: 'Vegetables', value: 40, color: '#34D399' },
-      { name: 'Fruits', value: 25, color: '#3B82F6' },
-      { name: 'Dairy', value: 15, color: '#F59E0B' },
-      { name: 'Grains', value: 20, color: '#8B5CF6' },
-    ],
+  stats = {
+    totalScans: 24,
+    verifiedProducts: 22,
+    carbonOffset: '12kg',
+    localSupport: '₹8,500' // Amount spent on local farmers
   };
 
-  purchaseHistory: Purchase[] = [
-    { name: 'Organic Tomato', purchaseDate: '2025-12-01', type: 'Vegetable', status: 'Verified' },
-    { name: 'Apple', purchaseDate: '2025-12-02', type: 'Fruit', status: 'Pending' },
-    { name: 'Milk', purchaseDate: '2025-12-03', type: 'Dairy', status: 'Verified' },
-    { name: 'Wheat', purchaseDate: '2025-12-04', type: 'Grains', status: 'Verified' },
+  recentScans = [
+    { id: 'BATCH-101', product: 'Organic Wheat', date: '2 hrs ago', status: 'Verified', image: 'assets/wheat.jpg' },
+    { id: 'BATCH-105', product: 'Fresh Tomato', date: '1 day ago', status: 'Verified', image: 'assets/tomato.jpg' },
+    { id: 'BATCH-99', product: 'Basmati Rice', date: '3 days ago', status: 'Suspicious', image: 'assets/rice.jpg' }
   ];
 
-  unreadCount = 3;
+  constructor() { }
 
-  ngOnInit(): void {}
-
-  getPieSegment(c: { value: number }): string {
-    const total = this.chartData.categories.reduce((sum, cat) => sum + cat.value, 0);
-    const percentage = (c.value / total) * 100;
-    return `${percentage} 100`;
+  ngAfterViewInit() {
+    this.initSpendChart();
   }
 
-  getPieOffset(index: number): number {
-    let offset = 0;
-    for (let i = 0; i < index; i++) {
-      offset += parseFloat(this.getPieSegment(this.chartData.categories[i]));
-    }
-    return offset;
+  initSpendChart() {
+    const ctx = this.spendChartRef.nativeElement.getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Vegetables', 'Grains', 'Fruits', 'Dairy'],
+        datasets: [{
+          data: [40, 30, 20, 10],
+          backgroundColor: [
+            '#10B981', // Emerald
+            '#F59E0B', // Amber
+            '#EF4444', // Red (Fruits)
+            '#3B82F6'  // Blue
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '75%',
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+  }
+
+  getStatusColor(status: string): string {
+    return status === 'Verified' ? 'text-emerald-600 bg-emerald-50' : 'text-red-600 bg-red-50';
   }
 }

@@ -46,6 +46,11 @@ export class Dashboard implements AfterViewInit {
         route: '/retailer',
         subtitle: 'Manage retail operations',
       },
+      FARMER: {
+        label: 'Farmer Panel',
+        route: '/farmer/dashboard',
+        subtitle: 'Manage your crops & listings',
+      },
     };
 
     return roleMap[roleKey] || null;

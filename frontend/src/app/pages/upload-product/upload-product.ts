@@ -21,13 +21,13 @@ export class UploadProduct {
 
   loading = false;
   today = this.getTodayString(); // used as max for date input
-  
+
   // AI Prediction properties
   showPrediction = false;
   aiPrediction: any = null;
   productId: number | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   // helper to produce today's date in yyyy-MM-dd
   private getTodayString(): string {
@@ -102,7 +102,7 @@ export class UploadProduct {
           } else {
             // Fallback if no AI prediction
             alert(`Product uploaded! ID = ${res.id}`);
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/products/my']);
           }
         },
         error: (err) => {
