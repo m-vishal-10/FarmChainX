@@ -5,58 +5,12 @@
       <span *ngIf="lastUpdated" class="text-xs text-gray-500">
         Last updated: {{ lastUpdated | date : 'shortTime' }}
       </span>
-      <button
-        (click)="refreshData()"
-        [disabled]="isLoading"
-        class="flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-green-700 transition disabled:bg-green-400"
-      >
-        <svg
-          *ngIf="!isLoading"
-          class="w-4 h-4 mr-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.34 19.34M18 10V5h-.582m14.356 2A8.001 8.001 0 0019.66 4.66"
-          ></path>
-        </svg>
-
-        <svg
-          *ngIf="isLoading"
-          class="animate-spin w-4 h-4 mr-2"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="20"
-            stroke="currentColor"
-            stroke-width="9"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-
-        {{ isLoading ? 'Loading...' : 'Refresh Data' }}
-      </button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-indigo-300 text-lg font-semibold">Total Users</h3>
@@ -66,8 +20,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-emerald-300 text-lg font-semibold">Total Products</h3>
@@ -77,8 +30,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-blue-300 text-lg font-semibold">Supply Logs</h3>
@@ -88,8 +40,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 to-pink-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 to-pink-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-purple-300 text-lg font-semibold">Feedbacks</h3>
@@ -99,8 +50,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-600 to-orange-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-600 to-orange-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-yellow-300 text-lg font-semibold">Sales Volume</h3>
@@ -112,8 +62,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 to-rose-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 to-rose-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-red-300 text-lg font-semibold">Pending Orders</h3>
@@ -123,8 +72,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-lime-600 to-green-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-lime-600 to-green-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-lime-300 text-lg font-semibold">New Users Today</h3>
@@ -134,8 +82,7 @@
     </div>
 
     <div
-      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-fuchsia-600 to-pink-600 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500"
-    >
+      class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-fuchsia-600 to-pink-600 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
       <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
         <h3 class="text-fuchsia-300 text-lg font-semibold">Average Rating</h3>

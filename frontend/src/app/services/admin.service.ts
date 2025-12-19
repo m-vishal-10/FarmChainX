@@ -7,6 +7,19 @@ export interface AdminOverview {
   totalProducts: number;
   totalLogs: number;
   totalFeedbacks: number;
+
+  salesVolume: number;
+  pendingOrders: number;
+  newUsersToday: number;
+  averageRating: number;
+}
+
+export interface SupplyChainLog {
+  id: number;
+  product_id: number;
+  action: string;
+  timestamp: string;
+  actor_id: number;
 }
 
 export interface UserDto {
@@ -16,26 +29,16 @@ export interface UserDto {
   roles: string[];
 }
 
-export interface AdminPromotionRequestDto {
-  id: number;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
-  requestedAt: string;
-  approved?: boolean;
-  rejected?: boolean;
-}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
 
-  private baseUrl = '/api/admin';  
+  private baseUrl = '/api/admin';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getOverview(): Observable<AdminOverview> {
     return this.http.get<AdminOverview>(`${this.baseUrl}/overview`);
@@ -45,23 +48,13 @@ export class AdminService {
     return this.http.get<UserDto[]>(`${this.baseUrl}/users`);
   }
 
+  getSystemLogs(): Observable<SupplyChainLog[]> {
+    return this.http.get<SupplyChainLog[]>(`${this.baseUrl}/logs`);
+  }
+
   promoteUser(userId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/promote/${userId}`, {});
   }
 
-  requestAdminAccess(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/request-admin`, {});
-  }
 
-  getPendingRequests(): Observable<AdminPromotionRequestDto[]> {
-    return this.http.get<AdminPromotionRequestDto[]>(`${this.baseUrl}/promotion-requests`);
-  }
-
-  approveRequest(requestId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/promotion-requests/${requestId}/approve`, {});
-  }
-
-  rejectRequest(requestId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/promotion-requests/${requestId}/reject`, {});
-  }
 }

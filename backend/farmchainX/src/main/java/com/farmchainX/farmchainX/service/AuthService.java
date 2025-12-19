@@ -28,8 +28,7 @@ public class AuthService {
             UserRepository userRepository,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
-            JwtUtil jwtUtil
-    ) {
+            JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -86,7 +85,7 @@ public class AuthService {
         user.setRoles(Set.of(role));
         userRepository.save(user);
 
-        return new AuthResponse(null, role.getName(), email);
+        return new AuthResponse(null, role.getName(), email, request.getName());
     }
 
     public AuthResponse login(LoginRequest login) {
@@ -126,7 +125,7 @@ public class AuthService {
         // ✅ Generate token
         String token = jwtUtil.generateToken(user.getEmail(), primaryRole, user.getId());
 
-        return new AuthResponse(token, primaryRole, user.getEmail());
+        return new AuthResponse(token, primaryRole, user.getEmail(), user.getName());
     }
 
     public AuthResponse refreshToken(String refreshToken) {
@@ -157,14 +156,15 @@ public class AuthService {
             // Generate new access token
             String newToken = jwtUtil.generateToken(user.getEmail(), primaryRole, user.getId());
 
-            return new AuthResponse(newToken, primaryRole, user.getEmail());
+            return new AuthResponse(newToken, primaryRole, user.getEmail(), user.getName());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired refresh token");
         }
     }
 
     public void logout(String token) {
-        // For stateless JWT, logout is typically handled client-side by removing the token
+        // For stateless JWT, logout is typically handled client-side by removing the
+        // token
         // If you want to implement token blacklisting, you would need Redis or similar
         // For now, this is a no-op as JWT tokens are stateless
     }

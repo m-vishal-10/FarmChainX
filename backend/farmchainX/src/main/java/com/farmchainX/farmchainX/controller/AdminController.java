@@ -21,6 +21,8 @@ import com.farmchainX.farmchainX.repository.RoleRepository;
 import com.farmchainX.farmchainX.repository.UserRepository;
 import com.farmchainX.farmchainX.service.AdminOverviewService;
 import com.farmchainX.farmchainX.service.AdminPromotionService;
+import com.farmchainX.farmchainX.model.SupplyChainLog;
+import com.farmchainX.farmchainX.repository.SupplyChainLogRepository;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -30,6 +32,7 @@ public class AdminController {
     private final UserRepository userRepo;
     private final RoleRepository roleRepo;
     private final AdminPromotionService promotionService;
+    private final SupplyChainLogRepository logRepo;
 
     record NestedUser(String name, String email) {
 
@@ -41,19 +44,20 @@ public class AdminController {
             return new PromotionRequestView(
                     r.getId(),
                     r.getRequestedAt(),
-                    new NestedUser(r.getUser().getName(), r.getUser().getEmail())
-            );
+                    new NestedUser(r.getUser().getName(), r.getUser().getEmail()));
         }
     }
 
     public AdminController(AdminOverviewService overviewService,
             UserRepository userRepo,
             RoleRepository roleRepo,
-            AdminPromotionService promotionService) {
+            AdminPromotionService promotionService,
+            SupplyChainLogRepository logRepo) {
         this.overviewService = overviewService;
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.promotionService = promotionService;
+        this.logRepo = logRepo;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -123,5 +127,11 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<User> getAllUsers() {
         return userRepo.findAll();
+    }
+
+    @GetMapping("/logs")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<SupplyChainLog> getAllLogs() {
+        return logRepo.findAll();
     }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 type PrimaryRole = 'ADMIN' | 'FARMER' | 'DISTRIBUTOR' | 'RETAILER' | 'CONSUMER' | 'USER';
 
@@ -16,17 +17,18 @@ interface User {
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
-  // Note: Template remains in './admin-users.html'
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-users.html',
   styleUrl: './admin-users.scss',
   selector: 'app-admin-users'
 })
 export class AdminUsers implements OnInit {
   users: User[] = [];
+  filteredUsers: User[] = [];
+  searchTerm: string = '';
   isLoading: boolean = false; // Manages the loading spinner/state
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -64,6 +66,7 @@ export class AdminUsers implements OnInit {
             isPromoting: false // Initialize state
           };
         });
+        this.filterUsers(); // Initial filter
         this.isLoading = false;
       },
       error: (err) => {
@@ -95,7 +98,7 @@ export class AdminUsers implements OnInit {
     if (!user || !confirm(`Are you sure you want to promote ${user.name} to Admin? This action cannot be undone.`)) return;
 
     user.isPromoting = true; // Set promoting state to disable the button
-    
+
     this.http.post(`/api/admin/promote/${userId}`, {}).subscribe({
       next: () => {
         alert(`${user.name} promoted to Admin successfully!`);
@@ -107,5 +110,22 @@ export class AdminUsers implements OnInit {
         console.error('Promotion error:', err);
       }
     });
+  }
+
+  onSearch(): void {
+    this.filterUsers();
+  }
+
+  filterUsers(): void {
+    if (!this.searchTerm) {
+      this.filteredUsers = this.users;
+      return;
+    }
+    const term = this.searchTerm.toLowerCase();
+    this.filteredUsers = this.users.filter(u =>
+      u.name.toLowerCase().includes(term) ||
+      u.email.toLowerCase().includes(term) ||
+      u.primaryRole.toLowerCase().includes(term)
+    );
   }
 }

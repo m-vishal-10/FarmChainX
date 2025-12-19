@@ -2,7 +2,7 @@ import { Component, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { AdminService } from '../../services/admin.service';
+
 
 @Component({
   standalone: true,
@@ -12,7 +12,7 @@ import { AdminService } from '../../services/admin.service';
 })
 export class Dashboard implements AfterViewInit {
   private authService = inject(AuthService);
-  private adminService = inject(AdminService);
+
   private router = inject(Router);
 
   name = this.authService.getName() || 'User';
@@ -62,15 +62,7 @@ export class Dashboard implements AfterViewInit {
     console.log('tw-ring-color:', ringColor);
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
 
-  requestAdminAccess(): void {
-    this.adminService.requestAdminAccess().subscribe({
-      next: () => alert('Admin access requested!'),
-      error: () => alert('Already requested or you are admin'),
-    });
-  }
+
+
 }

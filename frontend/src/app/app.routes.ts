@@ -119,12 +119,11 @@ export const routes: Routes = [
           import('./pages/admin/admin-users/admin-users').then((m) => m.AdminUsers),
       },
       {
-        path: 'promotion-requests',
+        path: 'logs',
         loadComponent: () =>
-          import('./pages/admin/admin-promotion-requests/admin-promotion-requests').then(
-            (m) => m.AdminPromotionRequests
-          ),
+          import('./pages/admin/admin-logs/admin-logs').then((m) => m.AdminLogs),
       },
+
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
