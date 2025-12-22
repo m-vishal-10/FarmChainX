@@ -56,7 +56,8 @@ public class ProductController {
             ProductRepository productRepository,
             SupplyChainLogRepository supplyChainLogRepository,
             FeedbackRepository feedbackRepository,
-            com.farmchainX.farmchainX.service.GroqAIService groqAIService) {
+            com.farmchainX.farmchainX.service.GroqAIService groqAIService,
+            AIPredictionRepository aiPredictionRepository) {
         this.productService = productService;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
@@ -137,11 +138,11 @@ public class ProductController {
                 AIPrediction prediction = new AIPrediction();
                 prediction.setProduct(saved);
                 prediction.setFarmer(farmer);
-                
+
                 // Store full prediction as JSON
                 String predictionJson = objectMapper.writeValueAsString(aiPrediction);
                 prediction.setPredictionData(predictionJson);
-                
+
                 // Extract and store key fields for easier querying
                 if (aiPrediction.containsKey("qualityGrade")) {
                     prediction.setQualityGrade(String.valueOf(aiPrediction.get("qualityGrade")));
@@ -171,9 +172,10 @@ public class ProductController {
                     prediction.setPriceEstimate(String.valueOf(aiPrediction.get("priceEstimate")));
                 }
                 if (aiPrediction.containsKey("certificationEligibility")) {
-                    prediction.setCertificationEligibility(String.valueOf(aiPrediction.get("certificationEligibility")));
+                    prediction
+                            .setCertificationEligibility(String.valueOf(aiPrediction.get("certificationEligibility")));
                 }
-                
+
                 aiPredictionRepository.save(prediction);
             } catch (Exception e) {
                 System.err.println("[AI Prediction Save Error] " + e.getMessage());
@@ -261,7 +263,7 @@ public class ProductController {
                 .orElseThrow(() -> new RuntimeException("Farmer not found"));
 
         List<AIPrediction> predictions = aiPredictionRepository.findByFarmerIdOrderByCreatedAtDesc(farmer.getId());
-        
+
         // Convert to response format with product details
         List<Map<String, Object>> response = predictions.stream().map(prediction -> {
             Map<String, Object> predMap = new HashMap<>();
@@ -277,20 +279,19 @@ public class ProductController {
             predMap.put("priceEstimate", prediction.getPriceEstimate());
             predMap.put("certificationEligibility", prediction.getCertificationEligibility());
             predMap.put("createdAt", prediction.getCreatedAt());
-            
+
             // Parse full prediction data if available
             try {
                 if (prediction.getPredictionData() != null) {
                     Map<String, Object> fullPrediction = objectMapper.readValue(
-                        prediction.getPredictionData(), 
-                        Map.class
-                    );
+                            prediction.getPredictionData(),
+                            Map.class);
                     predMap.put("fullPrediction", fullPrediction);
                 }
             } catch (Exception e) {
                 // Ignore parsing errors
             }
-            
+
             return predMap;
         }).collect(java.util.stream.Collectors.toList());
 
