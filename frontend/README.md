@@ -1,59 +1,64 @@
-# FarmchainxFrontend
+# 🌾 FarmChainX Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
+FarmChainX is a cutting-edge **Agricultural Supply Chain Management System** built with **Angular 20** and **Tailwind CSS**. It provides a premium, responsive user interface for tracking agricultural products from farm to fork, ensuring transparency, quality, and trust.
 
-## Development server
+## 🚀 Features
 
-To start a local development server, run:
+### 👨‍🌾 Farmer Dashboard
+- **Product Management**: Register and upload harvest details with images.
+- **AI Quality Scoring**: View automated quality assessments for crops.
+- **QR Code Generation**: Generate unique QR codes for product batches.
+- **Sales Analytics**: Track sales and revenue with interactive charts.
 
-```bash
-ng serve
-```
+### 🚚 Distributor & Retailer Portals
+- **Marketplace**: Browse and procure fresh produce directly from farmers.
+- **Inventory Management**: Real-time tracking of stock levels.
+- **Supply Chain Flow**: Manage shipments, orders, and dispatch logistics.
+- **Provenance Tracking**: Verify product origin and journey steps.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 🛒 Consumer Interface
+- **Traceability Timeline**: Scan QR codes or search IDs to see the full journey of a product.
+- **Eco-Impact Specs**: View sustainability data and quality certifications.
+- **Shopping Cart**: Purchase verified organic products.
 
-## Code scaffolding
+### 🛡️ Admin & Auditor
+- **System Logs**: Monitor system activities and security events.
+- **User Management**: Manage role-based access control.
+- **Verification**: Audit product batches and override quality scores if necessary.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛠️ Tech Stack
 
-```bash
-ng generate component component-name
-```
+- **Framework**: [Angular 20](https://angular.io/) (Bleeding Edge)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Icons**: [Lucide Angular](https://lucide.dev/)
+- **Charts**: [ApexCharts](https://apexcharts.com/) & Chart.js
+- **QR Scanning**: ZXing Browser
+- **HTTP Client**: Axios based services (via Angular HTTP Client)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📦 Installation & Setup
 
-```bash
-ng generate --help
-```
+1. **Prerequisites**: Ensure you have Node.js (v18+) and npm installed.
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Run Development Server**:
+   ```bash
+   ng serve
+   ```
+   Navigate to `http://localhost:4200/`. The app will verify connections to the backend API automatically.
 
-## Building
+## 🧪 Testing
 
-To build the project run:
+- **Unit Tests**: `ng test`
+- **E2E Tests**: `ng e2e` (configured via Cypress/Protractor if available)
 
-```bash
-ng build
-```
+## 📂 Project Structure
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- `src/app/pages`: Contains modules for each role (Farmer, Distributor, Admin, etc.)
+- `src/app/components`: Reusable UI components (Navbar, Cards, Modals).
+- `src/app/services`: API integration services.
+- `src/assets`: Static images and global styles.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*Generated for FarmChainX Project*

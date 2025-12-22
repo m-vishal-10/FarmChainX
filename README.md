@@ -1,79 +1,75 @@
-FarmChainX
+# 🌾 FarmChainX
+### *The Future of Transparent Agriculture Supply Chain*
 
-Status: Work in Progress (WIP)
+![Status](https://img.shields.io/badge/Status-Active_Development-success?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Stack-Angular_20_%2B_Spring_Boot_3.5-blue?style=for-the-badge)
 
-🚀 Overview
+**FarmChainX** is a next-generation supply chain platform that leverages **Blockchain transparency** and **AI-driven insights** to connect farmers, distributors, retailers, and consumers. By digitizing the journey from *seed to shelf*, we ensure fair pricing for farmers, optimized logistics for distributors, and verified quality for consumers.
 
-FarmChainX is an AI and blockchain-powered supply chain platform built for the agriculture industry. It ensures transparency, traceability, and authenticity for farm products — from the farmer’s field to the consumer’s hands. The project combines Spring Boot for backend APIs, blockchain for tamper-proof records, and AI for quality checks and demand forecasting.
+---
 
-🌾 How It Works
+## 🚀 Key Features
 
-👨‍🌾 Farmer
+| Role | Capabilities |
+|------|--------------|
+| **👨‍🌾 Farmer** | Register harvests, upload verified photos, get AI quality scores, and sell directly to the network. |
+| **🚚 Distributor** | Real-time marketplace for procurement, inventory management, and logistics tracking. |
+| **🏬 Retailer** | Stock verification, provenance checks, and detailed product history for shelf items. |
+| **🛒 Consumer** | Scan QR codes to see the full journey, verify organic status, and view eco-impact data. |
+| **🔎 Auditor** | System-wide oversight, quality grading verification, and fraud detection. |
 
-Registers and uploads product details such as name, category, quantity, harvest date, and photos.
+---
 
-Each product batch receives a unique blockchain entry for traceability.
+## 🛠️ Technology Ecosystem
 
-Can view AI-based quality scores generated from uploaded images.
+### **Frontend Client** ([`/frontend`](./frontend))
+A premium, responsive Single Page Application (SPA).
+- **Framework**: Angular 20 (Bleeding Edge)
+- **Design System**: Tailwind CSS 4 + Lucide Icons
+- **Key Modules**: Role-based Dashboards, Interactive Charts, QR Scanner.
 
-🚚 Distributor
+### **Backend Core** ([`/backend/farmchainX`](./backend/farmchainX))
+A robust, secure, and high-performance API layer.
+- **Framework**: Spring Boot 3.5 & Java 21
+- **Database**: MySQL 8.0
+- **Security**: JWT Authentication & Spring Security
+- **Integration**: Cloudinary (Media), ZXing (QR), AI Microservices.
 
-Views available products from farmers and purchases them in batches.
+---
 
-Updates transportation and storage details, recorded immutably on the blockchain.
+## 🏁 Getting Started
 
-Uses AI-based demand forecasts to optimize logistics and inventory.
+To run the full stack locally, you will need to start both the backend server and the frontend client.
 
-🧾 Quality Auditor
+### 1. Database Setup
+Ensure **MySQL** is running and create a database named `farmchainx_db`. Configure your credentials in `backend/farmchainX/src/main/resources/application.properties`.
 
-Reviews product and batch details submitted by farmers and distributors.
+### 2. Backend Startup
+```bash
+cd backend/farmchainX
+./mvnw spring-boot:run
+```
+*Server runs on port `8080`.*
 
-Uses blockchain logs to verify authenticity and detect tampering.
+### 3. Frontend Startup
+```bash
+cd frontend
+npm install
+ng serve
+```
+*Client runs on port `4200`.*
 
-Approves or flags batches based on AI-assisted quality results.
+---
 
-🛒 Retailer / Consumer
+## 🗺️ Roadmap & Status
 
-Can track a product’s complete journey from farm to shelf.
+- [x] **Core Architecture**: Spring Boot + Angular Setup.
+- [x] **Authentication**: Secure Login/Register for all roles.
+- [x] **Farmer Module**: Product upload & My Products view.
+- [x] **Distributor/Retailer**: Marketplace & Inventory logic.
+- [x] **Consumer Experience**: Public product verification page.
+- [ ] **Blockchain Integration**: Migrating internal ledgers to Hyperledger/Ethereum.
+- [ ] **Mobile App**: Native mobile wrapper for on-field usage.
 
-Verifies product authenticity, quality, and sustainability data stored on blockchain.
-
-Gains trust and confidence in organic and eco-friendly products.
-
-⚙️ Features
-
-Product and batch registration with complete origin details
-
-Blockchain-based tracking for authenticity and transparency
-
-AI-driven product quality assessment and demand forecasting
-
-Secure JWT authentication and role-based access control
-
-RESTful APIs following clean controller–service–repository architecture
-
-🧰 Tech Stack
-
-Backend: Java, Spring Boot, Spring Data JPA
-
-Database: MySQL
-
-Blockchain: Hyperledger / Private Ledger (Prototype)
-
-AI Module: Python (Flask / FastAPI microservice)
-
-Security: Spring Security + JWT
-
-Tools: Maven, Lombok, Postman, Docker
-
-🗺️ Roadmap
-
-Integrate AI model for real-time quality checking
-
-Implement blockchain ledger for transaction traceability
-
-Build React-based frontend dashboard for all user roles
-
-Add CI/CD pipelines and Dockerized deployment
-
-👨‍💻 Roles Summary Role Capabilities Farmer Add products, upload batches, view AI quality report Distributor Purchase batches, track logistics, forecast demand Auditor Verify authenticity, validate blockchain events Retailer / Consumer Track product journey and verify origin
+---
+**FarmChainX** — *Empowering Agriculture with Technology.*
