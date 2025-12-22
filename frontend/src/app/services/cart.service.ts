@@ -42,7 +42,8 @@ export class CartService {
                     name: product.cropName || product.name,
                     price: product.expectedPrice || product.price || 100, // Fallback price
                     quantity: quantity,
-                    image: product.imageUrl || product.image || 'assets/placeholder.jpg', // Fallback image
+                    // Fix: Use imagePath as primary source, then imageUrl, then image, then fallback
+                    image: product.imagePath || product.imageUrl || product.image || 'assets/placeholder.jpg',
                     quality: product.qualityGrade || 'Standard'
                 }];
             }

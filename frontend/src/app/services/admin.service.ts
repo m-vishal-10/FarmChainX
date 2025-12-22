@@ -16,10 +16,11 @@ export interface AdminOverview {
 
 export interface SupplyChainLog {
   id: number;
-  product_id: number;
+  productId: number;
   action: string;
   timestamp: string;
-  actor_id: number;
+  actorId: number;
+  details: string;
 }
 
 export interface UserDto {

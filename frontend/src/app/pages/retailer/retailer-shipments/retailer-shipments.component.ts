@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ProductService } from '../../../services/product.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, FormsModule],
   selector: 'app-retailer-shipments',
   templateUrl: './retailer-shipments.component.html',
 })
 export class RetailerShipmentsComponent implements OnInit {
   shipments: any[] = [];
   loading = true;
+  verifyingId: any = null;
+  verificationChecked = false;
 
   constructor(private productService: ProductService) { }
 
@@ -33,18 +36,31 @@ export class RetailerShipmentsComponent implements OnInit {
     });
   }
 
+  startVerification(id: any) {
+    this.verifyingId = id;
+    this.verificationChecked = false;
+  }
+
+  cancelVerification() {
+    this.verifyingId = null;
+    this.verificationChecked = false;
+  }
+
   confirmReceipt(shipment: any) {
-    if (confirm('Confirm that you have physically received this shipment?')) {
-      const location = "Retailer Store (Received)";
-      this.productService.confirmReceipt(shipment.productId, location).subscribe({
-        next: () => {
-          alert('✅ Receipt Confirmed! Product is now in your Inventory.');
-          this.fetchShipments();
-        },
-        error: (err) => {
-          alert('Error confirming receipt: ' + err.error?.error || err.message);
-        }
-      });
+    if (!this.verificationChecked) {
+      return;
     }
+
+    const location = "Retailer Store (Received)";
+    this.productService.confirmReceipt(shipment.productId, location).subscribe({
+      next: () => {
+        alert('✅ Receipt Confirmed! Product is now in your Inventory.');
+        this.fetchShipments();
+        this.verifyingId = null;
+      },
+      error: (err) => {
+        alert('Error confirming receipt: ' + err.error?.error || err.message);
+      }
+    });
   }
 }

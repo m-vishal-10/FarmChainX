@@ -137,14 +137,16 @@ public class ProductService {
         data.put("harvestDate", product.getHarvestDate());
         data.put("qualityGrade", product.getQualityGrade() != null ? product.getQualityGrade() : "Pending");
         data.put("confidence", product.getConfidenceScore() != null ? product.getConfidenceScore() : 0.0);
+        data.put("imagePath", product.getImagePath()); // Match frontend
         data.put("imageUrl", product.getImagePath());
         data.put("gpsLocation", product.getGpsLocation());
         data.put("displayLocation", resolveAddressFromGps(product.getGpsLocation()));
+        data.put("originLocation", resolveAddressFromGps(product.getGpsLocation())); // Match frontend
         data.put("productId", product.getId());
-        data.put("publicUuid", product.getPublicUuid());
         data.put("publicUuid", product.getPublicUuid());
         data.put("qrCodePath", product.getQrCodePath());
         data.put("price", product.getPrice());
+        data.put("farmerName", product.getFarmer() != null ? product.getFarmer().getName() : "Unknown Farmer");
 
         List<SupplyChainLog> logs = supplyChainLogRepository.findByProductIdOrderByTimestampAsc(productId);
         List<Map<String, Object>> trackingHistory = logs.stream().map(log -> {
@@ -192,6 +194,7 @@ public class ProductService {
         }
 
         data.put("trackingHistory", trackingHistory);
+        data.put("logs", trackingHistory); // Match frontend
         return data;
     }
 
@@ -353,5 +356,34 @@ public class ProductService {
                 })
                 .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getUserNotifications(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null)
+            return List.of();
+
+        // fetch logs where this user is the receiver or sender ?
+        // For consumer: mostly receiver (bought items)
+        // Let's get logs where toUserId == user.id
+        List<SupplyChainLog> logs = supplyChainLogRepository.findAll().stream()
+                .filter(l -> (l.getToUserId() != null && l.getToUserId().equals(user.getId())))
+                .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
+                .collect(Collectors.toList());
+
+        return logs.stream().map(log -> {
+            Map<String, Object> notif = new HashMap<>();
+            notif.put("id", log.getId());
+            notif.put("title", "Update on Product");
+
+            // Try to find product name
+            String productName = productRepository.findById(log.getProductId())
+                    .map(Product::getCropName).orElse("Unknown Product");
+
+            notif.put("body", "Activity: " + log.getNotes() + " for " + productName);
+            notif.put("time", log.getTimestamp().toString());
+            notif.put("read", false); // Logic for read/unread could be added later
+            return notif;
+        }).collect(Collectors.toList());
     }
 }

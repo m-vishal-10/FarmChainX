@@ -46,7 +46,7 @@
           <img *ngIf="productData.imagePath" [src]="productData.imagePath" class="w-full h-full object-cover">
           <span *ngIf="!productData.imagePath">🌾</span>
         </div>
-        <div class="text-center md:text-left">
+        <div class="text-center md:text-left flex-grow">
           <div class="flex items-center justify-center md:justify-start gap-2">
             <h2 class="text-2xl font-bold text-gray-900">{{ productData.cropName }}</h2>
             <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full">AUTHENTIC</span>
@@ -57,6 +57,14 @@
             <span class="text-gray-600">💰 Price: <b>₹{{ productData.price }}</b></span>
             <span class="text-gray-600">⭐ Quality: <b>{{ productData.qualityGrade || 'N/A' }}</b></span>
           </div>
+        </div>
+
+        <!-- AI Score Card -->
+        <div
+          class="bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-xl border border-blue-100 text-center min-w-[200px]">
+          <p class="text-xs font-bold text-blue-600 uppercase tracking-wide">AI Trust Score</p>
+          <div class="text-4xl font-black text-blue-900 mt-2">{{ aiTrustScore }}%</div>
+          <p class="text-[10px] text-blue-500 mt-1 leading-tight">{{ aiAnalysis }}</p>
         </div>
       </div>
 
@@ -96,10 +104,46 @@
 
     </div>
 
-    <!-- Error State -->
-    <div *ngIf="error" class="text-center py-8 text-red-500 bg-red-50 rounded-xl mt-8">
-      <p class="font-bold">{{ error }}</p>
+
+    <!-- Feedback Section -->
+    <div class="mt-12 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">Rate this Product</h3>
+
+      <div *ngIf="!feedbackSubmitted">
+        <div class="flex justify-center gap-2 text-3xl mb-6">
+          <button (click)="setRating(1)" [class.grayscale]="rating < 1"
+            class="hover:scale-110 transition-transform">⭐</button>
+          <button (click)="setRating(2)" [class.grayscale]="rating < 2"
+            class="hover:scale-110 transition-transform">⭐</button>
+          <button (click)="setRating(3)" [class.grayscale]="rating < 3"
+            class="hover:scale-110 transition-transform">⭐</button>
+          <button (click)="setRating(4)" [class.grayscale]="rating < 4"
+            class="hover:scale-110 transition-transform">⭐</button>
+          <button (click)="setRating(5)" [class.grayscale]="rating < 5"
+            class="hover:scale-110 transition-transform">⭐</button>
+        </div>
+
+        <textarea [(ngModel)]="feedbackText" rows="3" placeholder="Is the produce fresh? Any packaging issues?"
+          class="w-full rounded-xl border-gray-200 focus:ring-emerald-500 focus:border-emerald-500 resize-none mb-4"></textarea>
+
+        <button (click)="submitFeedback()" [disabled]="rating === 0"
+          class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-black transition-colors disabled:opacity-50">
+          Submit Feedback
+        </button>
+      </div>
+
+      <div *ngIf="feedbackSubmitted" class="text-center py-6">
+        <div class="text-4xl mb-4">🙌</div>
+        <h4 class="font-bold text-gray-900">Thanks for your feedback!</h4>
+        <p class="text-gray-500">Your input helps farmers improve quality.</p>
+      </div>
     </div>
 
   </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="text-center py-8 text-red-500 bg-red-50 rounded-xl mt-8">
+    <p class="font-bold">{{ error }}</p>
+  </div>
+
 </div>

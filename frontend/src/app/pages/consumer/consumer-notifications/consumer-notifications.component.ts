@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-consumer-notifications',
@@ -7,30 +8,30 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './consumer-notifications.component.html',
 })
-export class ConsumerNotificationsComponent {
-  notifications = [
-    {
-      id: 1,
-      title: 'Product Verified',
-      body: 'Your purchase of Organic Apples is verified.',
-      time: '2h ago',
-      read: false,
-    },
-    {
-      id: 2,
-      title: 'New Feedback Request',
-      body: 'Please leave feedback for Honey Jar.',
-      time: '1d ago',
-      read: false,
-    },
-    { id: 3, title: 'Promo', body: 'New offers from local farms.', time: '3d ago', read: true },
-  ];
+export class ConsumerNotificationsComponent implements OnInit {
+  notifications = signal<any[]>([]);
+
+  constructor(private productService: ProductService) { }
+
+  ngOnInit() {
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    this.productService.getNotifications().subscribe({
+      next: (data) => {
+        this.notifications.set(data);
+      },
+      error: (err) => console.error('Failed to load notifications', err)
+    });
+  }
 
   markRead(n: any) {
     n.read = true;
+    // content of this method can include a backend call to mark as read if API supports it
   }
 
   clearAll() {
-    this.notifications = [];
+    this.notifications.set([]);
   }
 }

@@ -34,7 +34,7 @@ export class VerifyProduct implements OnInit {
   myRating = 5;
   myComment = '';
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.uuid = this.route.snapshot.paramMap.get('uuid')!;
@@ -64,7 +64,7 @@ export class VerifyProduct implements OnInit {
       const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
       this.currentUserId = payload.userId || payload.id || payload.sub || payload.user?.id || null;
       if (this.userRole === 'Distributor') this.loadRetailers();
-    } catch {}
+    } catch { }
   }
 
   private loadProduct() {
@@ -263,13 +263,13 @@ export class VerifyProduct implements OnInit {
   getCropEmoji(): string {
     const name = (this.product?.cropName || '').toLowerCase();
     const map: Record<string, string> = {
-      onion: 'Onion', tomato: 'Tomato', mango: 'Mango', potato: 'Potato', rice: 'Rice',
-      banana: 'Banana', apple: 'Apple', orange: 'Orange', grape: 'Grape', wheat: 'Wheat',
-      corn: 'Corn', carrot: 'Carrot', cucumber: 'Cucumber', lettuce: 'Lettuce',
-      strawberry: 'Strawberry', watermelon: 'Watermelon', coffee: 'Coffee', cotton: 'Cotton', sugarcane: 'Sugarcane'
+      onion: '🧅', tomato: '🍅', mango: '🥭', potato: '🥔', rice: '🍚',
+      banana: '🍌', apple: '🍎', orange: '🍊', grape: '🍇', wheat: '🌾',
+      corn: '🌽', carrot: '🥕', cucumber: '🥒', lettuce: '🥬',
+      strawberry: '🍓', watermelon: '🍉', coffee: '☕', cotton: '👕', sugarcane: '🍬'
     };
     const key = Object.keys(map).find(k => name.includes(k));
-    return key ? map[key] : 'Seedling';
+    return key ? map[key] : '🌱';
   }
 
   getImageUrl(path: string): string {

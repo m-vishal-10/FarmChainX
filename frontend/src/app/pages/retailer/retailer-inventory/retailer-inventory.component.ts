@@ -23,6 +23,8 @@ interface InventoryItem {
 export class RetailerInventoryComponent {
   lowThreshold = 20;
   items: InventoryItem[] = [];
+  activeQrItem: InventoryItem | null = null;
+  qrUrl: string = '';
 
   constructor(private http: HttpClient) {
     this.fetchInventory();
@@ -37,16 +39,31 @@ export class RetailerInventoryComponent {
     });
   }
 
-  receive(item: InventoryItem) {
-    // placeholder: open receive dialog / mark as received
-    console.log('Receive', item);
-    alert(`Received ${item.name} (batch ${item.batchId})`);
+  openQr(item: InventoryItem) {
+    this.activeQrItem = item;
+    // Link to public verification page
+    const verifyUrl = `${window.location.origin}/verify/${item.productId}`;
+    this.qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}`;
   }
 
-  adjust(item: InventoryItem) {
-    // placeholder: open adjust modal
-    console.log('Adjust', item);
-    alert(`Adjust ${item.name} inventory`);
+  closeQr() {
+    this.activeQrItem = null;
+    this.qrUrl = '';
+  }
+
+  sell(item: InventoryItem) {
+    if (confirm(`Mark 1 unit of ${item.name} as sold?`)) {
+      this.http.post('/api/retailer/sell', { productId: item.productId }).subscribe({
+        next: () => {
+          alert(`✅ Sold 1 unit of ${item.name}. Inventory updated.`);
+          this.fetchInventory(); // Refresh list to remove item
+        },
+        error: (err) => {
+          alert('Error processing sale: ' + (err.error?.message || "Unknown error"));
+          console.error(err);
+        }
+      });
+    }
   }
 
   exportCsv() {

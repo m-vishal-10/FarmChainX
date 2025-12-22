@@ -33,9 +33,9 @@ export class ConsumerDashboardComponent implements AfterViewInit, OnInit {
   };
 
   recentScans = [
-    { id: 'BATCH-101', product: 'Organic Wheat', date: '2 hrs ago', status: 'Verified', image: 'assets/wheat.jpg' },
-    { id: 'BATCH-105', product: 'Fresh Tomato', date: '1 day ago', status: 'Verified', image: 'assets/tomato.jpg' },
-    { id: 'BATCH-99', product: 'Basmati Rice', date: '3 days ago', status: 'Suspicious', image: 'assets/rice.jpg' }
+    { id: 'BATCH-2025-101', product: 'Organic Wheat', date: '2 hrs ago', status: 'Verified' },
+    { id: 'BATCH-2025-105', product: 'Fresh Tomato', date: '1 day ago', status: 'Verified' },
+    { id: 'BATCH-2025-99', product: 'Basmati Rice', date: '3 days ago', status: 'Suspicious' }
   ];
 
   products = signal<any[]>([]);
@@ -63,7 +63,7 @@ export class ConsumerDashboardComponent implements AfterViewInit, OnInit {
     // We still load products for dashboard summary if needed
     this.productService.getMarketProducts().subscribe({
       next: (data) => {
-        this.products.set(data.slice(0, 4)); // Show only 4 recent on dashboard
+        this.products.set(data); // Show all products
       },
       error: (err) => console.error('Failed to load products', err)
     });

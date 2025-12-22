@@ -475,6 +475,164 @@ public class SupplyChainController {
                 return ResponseEntity.ok(stats);
         }
 
+        @GetMapping("/market/distributors")
+        public List<Map<String, Object>> getDistributorMarket() {
+                // Fetch all users with ROLE_DISTRIBUTOR
+                List<User> distributors = userRepository.findAll().stream()
+                                .filter(u -> u.getRoles().stream()
+                                                .anyMatch(r -> "ROLE_DISTRIBUTOR".equals(r.getName())))
+                                .collect(java.util.stream.Collectors.toList());
+
+                List<Map<String, Object>> marketItems = new java.util.ArrayList<>();
+
+                for (User distributor : distributors) {
+                        // For each distributor, fetch their current inventory
+                        List<SupplyChainLog> logs = supplyChainLogRepository
+                                        .findByToUserIdOrderByTimestampDesc(distributor.getId());
+
+                        // Deduplicate by Product ID to find latest status
+                        Map<Long, SupplyChainLog> latestByProduct = new java.util.HashMap<>();
+                        for (SupplyChainLog log : logs) {
+                                if (!latestByProduct.containsKey(log.getProductId())) {
+                                        latestByProduct.put(log.getProductId(), log);
+                                }
+                        }
+
+                        for (SupplyChainLog log : latestByProduct.values()) {
+                                // Check if they still have it (global check)
+                                SupplyChainLog globalLatest = supplyChainLogRepository
+                                                .findFirstByProductIdOrderByTimestampDesc(log.getProductId())
+                                                .orElse(null);
+
+                                if (globalLatest != null && globalLatest.getToUserId() != null
+                                                && globalLatest.getToUserId().equals(distributor.getId())) {
+
+                                        // Valid item in distributor inventory
+                                        Map<String, Object> item = new java.util.HashMap<>();
+                                        item.put("id", log.getId()); // Use Log ID as item ID just for reference, or
+                                                                     // mocked unique listing ID
+                                        item.put("distributorId", distributor.getId());
+                                        item.put("distributor", distributor.getName());
+                                        item.put("location", "Retail Hub");
+                                        item.put("verified", true);
+
+                                        // Product Details
+                                        // Let's wrap in try-catch or assume safe if we trust data integrity
+                                        try {
+                                                com.farmchainX.farmchainX.model.Product p = productService
+                                                                .getProductById(log.getProductId());
+                                                if (p != null) {
+                                                        item.put("productId", p.getId());
+                                                        item.put("cropName", p.getCropName());
+                                                        item.put("quantity", 100); // Mock per item
+                                                        item.put("unit", "kg");
+                                                        item.put("pricePerUnit", p.getPrice());
+                                                        item.put("quality", p.getQualityGrade());
+                                                }
+                                        } catch (Exception e) {
+                                        }
+
+                                        marketItems.add(item);
+                                }
+                        }
+                }
+                return marketItems;
+        }
+
+        @PostMapping("/purchase")
+        @PreAuthorize("hasRole('CONSUMER')")
+        @Transactional
+        public ResponseEntity<?> purchaseProduct(@RequestBody Map<String, Object> payload, Principal principal) {
+                try {
+                        Long productId = Long.valueOf(String.valueOf(payload.get("productId")));
+                        String location = (String) payload.getOrDefault("location", "Online Store");
+
+                        User consumer = userRepository.findByEmail(principal.getName())
+                                        .orElseThrow(() -> new RuntimeException("User not found"));
+
+                        SupplyChainLog lastLog = supplyChainLogRepository
+                                        .findTopByProductIdOrderByTimestampDesc(productId)
+                                        .orElse(null);
+
+                        // Check if already sold to a consumer
+                        if (lastLog != null && lastLog.getNotes() != null
+                                        && lastLog.getNotes().contains("Sold to Consumer")) {
+                                return ResponseEntity.status(HttpStatus.CONFLICT)
+                                                .body(Map.of("error", "Product already sold"));
+                        }
+
+                        // Create Purchase Log
+                        SupplyChainLog purchaseLog = new SupplyChainLog();
+                        purchaseLog.setProductId(productId);
+                        purchaseLog.setFromUserId(lastLog != null ? lastLog.getToUserId() : null); // From whoever had
+                                                                                                   // it last
+                        purchaseLog.setToUserId(consumer.getId());
+                        purchaseLog.setLocation(location);
+                        purchaseLog.setNotes("Sold to Consumer " + consumer.getName());
+                        purchaseLog.setCreatedBy(consumer.getEmail());
+                        purchaseLog.setConfirmed(true);
+                        purchaseLog.setConfirmedAt(java.time.LocalDateTime.now());
+                        purchaseLog.setConfirmedById(consumer.getId());
+                        purchaseLog.setTimestamp(java.time.LocalDateTime.now());
+
+                        String prevHash = lastLog != null ? lastLog.getHash() : "";
+                        purchaseLog.setPrevHash(prevHash);
+                        purchaseLog.setHash(com.farmchainX.farmchainX.util.HashUtil.computeHash(purchaseLog, prevHash));
+
+                        supplyChainLogRepository.save(purchaseLog);
+
+                        return ResponseEntity.ok(Map.of("message", "Purchase successful"));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(Map.of("error", e.getMessage()));
+                }
+        }
+
+        @GetMapping("/consumer/history")
+        @PreAuthorize("hasRole('CONSUMER')")
+        public List<Map<String, Object>> getConsumerHistory(Principal principal) {
+                User consumer = userRepository.findByEmail(principal.getName())
+                                .orElseThrow(() -> new RuntimeException("User not found"));
+
+                List<SupplyChainLog> myPurchases = supplyChainLogRepository
+                                .findByToUserIdOrderByTimestampDesc(consumer.getId());
+
+                List<Map<String, Object>> history = new java.util.ArrayList<>();
+
+                for (SupplyChainLog log : myPurchases) {
+                        // Basic check: is this a purchase?
+                        if (log.getNotes() != null && log.getNotes().contains("Sold to Consumer")) {
+                                Map<String, Object> item = new java.util.HashMap<>();
+                                item.put("id", "ORD-" + log.getId()); // Mock Order ID
+                                item.put("date", log.getTimestamp());
+                                item.put("total", 0); // Placeholder
+                                item.put("status", "Delivered");
+                                item.put("vendor", "FarmChainX Market");
+
+                                // Fetch Product Details
+                                try {
+                                        com.farmchainX.farmchainX.model.Product p = productService
+                                                        .getProductById(log.getProductId());
+                                        if (p != null) {
+                                                item.put("total", p.getPrice());
+                                                item.put("items", List.of(Map.of(
+                                                                "name", p.getCropName(),
+                                                                "qty", "1 unit",
+                                                                "price", p.getPrice(),
+                                                                "image", p.getImagePath())));
+                                                item.put("ecoScore", 90 + (p.getId() % 10)); // Mock score
+                                                item.put("productId", p.getId());
+                                                item.put("publicUuid", p.getPublicUuid());
+                                        }
+                                } catch (Exception e) {
+                                        item.put("items", List.of());
+                                }
+                                history.add(item);
+                        }
+                }
+                return history;
+        }
+
         private void logDebug(String msg) {
                 try {
                         // Use a safe temp path or project root

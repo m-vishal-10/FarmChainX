@@ -52,9 +52,9 @@
     <div
       class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-600 to-orange-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-10">
         <h3 class="text-yellow-300 text-lg font-semibold">Sales Volume</h3>
-        <p class="text-5xl font-black mt-4 text-white">
+        <p class="text-4xl font-black mt-6 text-white">
           {{ formatCurrency(data?.salesVolume) }}
         </p>
         <p class="text-yellow-400 mt-2 text-md">Revenue this month</p>
@@ -64,7 +64,7 @@
     <div
       class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 to-rose-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-9">
         <h3 class="text-red-300 text-lg font-semibold">Pending Orders</h3>
         <p class="text-6xl font-black mt-4 text-white">{{ data?.pendingOrders || 0 }}</p>
         <p class="text-red-400 mt-2 text-md">Awaiting processing</p>
@@ -74,7 +74,7 @@
     <div
       class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-lime-600 to-green-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-9">
         <h3 class="text-lime-300 text-lg font-semibold">New Users Today</h3>
         <p class="text-6xl font-black mt-4 text-white">{{ data?.newUsersToday || 0 }}</p>
         <p class="text-lime-400 mt-2 text-md">24-hour acquisition</p>
@@ -84,7 +84,7 @@
     <div
       class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-fuchsia-600 to-pink-600 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
       <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+      <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-9">
         <h3 class="text-fuchsia-300 text-lg font-semibold">Average Rating</h3>
         <p class="text-6xl font-black mt-4 text-white">
           {{ formatRating(data?.averageRating) }}

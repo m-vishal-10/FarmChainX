@@ -75,4 +75,19 @@ export class ProductService {
     getDistributorStats(): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/track/dashboard/distributor`);
     }
+
+    purchaseProduct(productId: number, location: string): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/track/purchase`, {
+            productId,
+            location
+        });
+    }
+
+    getConsumerHistory(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/track/consumer/history`);
+    }
+
+    getNotifications(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/notifications`);
+    }
 }

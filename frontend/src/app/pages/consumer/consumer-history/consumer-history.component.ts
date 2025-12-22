@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-consumer-history',
@@ -20,47 +21,25 @@ export class ConsumerHistoryComponent implements OnInit {
   filterStatus = 'All';
   searchQuery = '';
 
-  allOrders = [
-    {
-      id: 'ORD-2025-1001',
-      items: [
-        { name: 'Organic Apples (Kashmir)', qty: '2kg', price: 400, image: 'assets/apple.jpg' },
-        { name: 'Raw Honey', qty: '500g', price: 350, image: 'assets/honey.jpg' }
-      ],
-      total: 750,
-      date: '2025-12-14',
-      status: 'Delivered',
-      ecoScore: 92,
-      vendor: 'Green Earth Organics'
-    },
-    {
-      id: 'ORD-2025-1005',
-      items: [
-        { name: 'Fresh Spinach', qty: '1kg', price: 80, image: 'assets/spinach.jpg' }
-      ],
-      total: 80,
-      date: '2025-12-15',
-      status: 'Processing',
-      ecoScore: 88,
-      vendor: 'Local Farm Co-op'
-    },
-    {
-      id: 'ORD-2025-0998',
-      items: [
-        { name: 'Basmati Rice (Premium)', qty: '5kg', price: 600, image: 'assets/rice.jpg' },
-        { name: 'Red Lentils', qty: '1kg', price: 120, image: 'assets/dal.jpg' }
-      ],
-      total: 720,
-      date: '2025-12-10',
-      status: 'Delivered',
-      ecoScore: 95,
-      vendor: 'Sikar Agro'
-    }
-  ];
+  allOrders: any[] = [];
+  filteredOrders: any[] = [];
+  loading = true;
 
-  filteredOrders = [...this.allOrders];
+  constructor(private productService: ProductService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.productService.getConsumerHistory().subscribe({
+      next: (data) => {
+        this.allOrders = data;
+        this.filteredOrders = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load history', err);
+        this.loading = false;
+      }
+    });
+  }
 
   filter(): void {
     this.filteredOrders = this.allOrders.filter(order => {
@@ -68,9 +47,9 @@ export class ConsumerHistoryComponent implements OnInit {
         this.filterStatus === 'All' || order.status === this.filterStatus;
 
       const matchSearch =
-        order.items.some(item =>
+        (order.items && order.items.some((item: any) =>
           item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        ) ||
+        )) ||
         order.vendor.toLowerCase().includes(this.searchQuery.toLowerCase());
 
       return matchStatus && matchSearch;

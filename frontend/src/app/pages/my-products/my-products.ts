@@ -15,7 +15,7 @@ interface RetryState {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, TitleCasePipe, DecimalPipe],
+  imports: [CommonModule, TitleCasePipe],
   templateUrl: './my-products.html',
 })
 export class MyProducts {

@@ -74,4 +74,8 @@ public interface SupplyChainLogRepository extends JpaRepository<SupplyChainLog, 
   long countPendingHandover(@Param("distributorId") Long distributorId);
 
   List<SupplyChainLog> findByFromUserId(Long fromUserId);
+
+  boolean existsByFromUserIdAndProductId(Long fromUserId, Long productId);
+
+  List<SupplyChainLog> findByToUserId(Long toUserId);
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.farmchainX.farmchainX.dto.AdminOverview;
+import com.farmchainX.farmchainX.dto.SystemLogDTO;
 import com.farmchainX.farmchainX.model.AdminPromotionRequest;
 import com.farmchainX.farmchainX.model.Role;
 import com.farmchainX.farmchainX.model.User;
@@ -131,7 +132,31 @@ public class AdminController {
 
     @GetMapping("/logs")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<SupplyChainLog> getAllLogs() {
-        return logRepo.findAll();
+    public List<SystemLogDTO> getAllLogs() {
+        return logRepo.findAll().stream()
+                .map(log -> {
+                    String action = "System Update";
+                    if (log.getPrevHash() == null || "0".equals(log.getPrevHash())) {
+                        action = "Product Created";
+                    } else if (log.isConfirmed()) {
+                        action = "Transfer Confirmed";
+                    } else if (log.isRejected()) {
+                        action = "Transfer Rejected";
+                    } else if (log.getToUserId() != null) {
+                        action = "Transfer Initiated";
+                    }
+
+                    String details = log.getNotes() != null ? log.getNotes() : "Logged at " + log.getLocation();
+                    Long actorId = log.getFromUserId() != null ? log.getFromUserId() : 0L;
+
+                    return new SystemLogDTO(
+                            log.getId(),
+                            log.getTimestamp().toString(),
+                            action,
+                            log.getProductId(),
+                            actorId,
+                            details);
+                })
+                .toList();
     }
 }

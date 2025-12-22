@@ -11,14 +11,22 @@ interface Order {
   status: string;
 }
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   selector: 'app-retailer-orders',
   templateUrl: './retailer-orders.component.html',
 })
 export class RetailerOrdersComponent {
   orders: Order[] = [];
+  showModal = false;
+  newOrder: any = {
+    supplierId: '',
+    items: '',
+    total: 0
+  };
 
   constructor(private http: HttpClient) {
     this.fetchOrders();
@@ -56,5 +64,29 @@ export class RetailerOrdersComponent {
   view(o: Order) {
     // open details modal or navigate to PO detail view (future)
     alert(`Open PO: ${o.id}`);
+  }
+
+  openCreateModal() {
+    this.showModal = true;
+  }
+
+  closeCreateModal() {
+    this.showModal = false;
+  }
+
+  createOrder() {
+    // Mock creation
+    const mockOrder: Order = {
+      id: 'PO-' + Math.floor(Math.random() * 1000),
+      supplier: 'Supplier ' + (this.newOrder.supplierId || 'Unknown'),
+      items: parseInt(this.newOrder.items) || 0,
+      total: this.newOrder.total,
+      createdAt: new Date().toISOString(),
+      status: 'Processing'
+    };
+
+    this.orders.unshift(mockOrder);
+    this.closeCreateModal();
+    alert('Purchase Order Created!');
   }
 }

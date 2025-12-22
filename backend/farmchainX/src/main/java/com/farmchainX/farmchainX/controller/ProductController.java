@@ -438,4 +438,13 @@ public class ProductController {
         market.addAll(retail);
         return market;
     }
+
+    @GetMapping("/notifications")
+    @PreAuthorize("hasAnyRole('CONSUMER', 'FARMER', 'DISTRIBUTOR', 'RETAILER', 'ADMIN')")
+    public List<Map<String, Object>> getNotifications(Principal principal) {
+        if (principal == null) {
+            return List.of();
+        }
+        return productService.getUserNotifications(principal.getName());
+    }
 }

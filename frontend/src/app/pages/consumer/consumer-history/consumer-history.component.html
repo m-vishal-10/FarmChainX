@@ -10,34 +10,23 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <!-- Filters -->
     <div
-      class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between"
-    >
+      class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
       <div class="relative w-full md:w-96">
-        <input
-          [(ngModel)]="searchQuery"
-          (input)="filter()"
-          type="text"
-          placeholder="Search by product or vendor..."
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
-        />
+        <input [(ngModel)]="searchQuery" (input)="filter()" type="text" placeholder="Search by product or vendor..."
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500" />
         <div class="absolute left-3 top-2.5 text-gray-400">🔍</div>
       </div>
 
       <div class="flex gap-2">
-        <select
-          [(ngModel)]="filterStatus"
-          (change)="filter()"
-          class="border border-gray-300 rounded-lg py-2 px-4 focus:ring-emerald-500 focus:border-emerald-500 text-gray-700"
-        >
+        <select [(ngModel)]="filterStatus" (change)="filter()"
+          class="border border-gray-300 rounded-lg py-2 px-4 focus:ring-emerald-500 focus:border-emerald-500 text-gray-700">
           <option value="All">All Statuses</option>
           <option value="Delivered">Delivered</option>
           <option value="Processing">Processing</option>
           <option value="Cancelled">Cancelled</option>
         </select>
 
-        <button
-          class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
-        >
+        <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
           Export CSV
         </button>
       </div>
@@ -45,14 +34,11 @@
 
     <!-- Orders -->
     <div class="space-y-6">
-      <div
-        *ngFor="let order of filteredOrders"
-        class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-      >
+      <div *ngFor="let order of filteredOrders"
+        class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
         <!-- Order Header -->
         <div
-          class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between md:items-center gap-4"
-        >
+          class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between md:items-center gap-4">
           <div class="flex flex-col md:flex-row md:gap-8">
             <div>
               <p class="text-xs font-bold text-gray-500 uppercase">Order Placed</p>
@@ -76,9 +62,7 @@
 
           <div class="flex items-center gap-4">
             <!-- DecimalPipe -->
-            <span
-              class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100"
-            >
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
               🌿 Eco-Score: {{ order.ecoScore | number : '1.0-0' }}/100
             </span>
             <p class="text-sm font-medium text-gray-500">Order #{{ order.id }}</p>
@@ -90,10 +74,9 @@
           <div class="flex flex-col md:flex-row gap-6 items-start justify-between">
             <div class="space-y-4 w-full">
               <div *ngFor="let item of order.items" class="flex gap-4">
-                <div
-                  class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-2xl flex-shrink-0"
-                >
-                  🍏
+                <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200">
+                  <img [src]="item.image || 'assets/placeholder.jpg'" [alt]="item.name"
+                    class="h-full w-full object-cover object-center">
                 </div>
 
                 <div>
@@ -112,23 +95,18 @@
             <div class="w-full md:w-auto flex flex-col gap-3 min-w-[200px]">
               <span
                 class="inline-flex justify-center items-center px-3 py-1 rounded-full text-sm font-bold ring-1 ring-inset w-fit self-start md:self-end"
-                [ngClass]="getStatusClass(order.status)"
-              >
+                [ngClass]="getStatusClass(order.status)">
                 {{ order.status }}
               </span>
 
               <div class="flex flex-col gap-2 mt-2">
-                <a
-                  routerLink="/consumer/verify"
-                  class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-center hover:bg-gray-50 text-sm"
-                >
+                <a [routerLink]="['/consumer/verify']" [queryParams]="{uuid: order.publicUuid}"
+                  class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-center hover:bg-gray-50 text-sm">
                   Track Order
                 </a>
 
-                <button
-                  *ngIf="order.status === 'Delivered'"
-                  class="w-full bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-emerald-700 text-sm"
-                >
+                <button *ngIf="order.status === 'Delivered'"
+                  class="w-full bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-emerald-700 text-sm">
                   Write Review
                 </button>
               </div>
@@ -140,10 +118,8 @@
       <!-- Empty State -->
       <div *ngIf="filteredOrders.length === 0" class="text-center py-12">
         <p class="text-gray-500 text-lg">No orders found matching your criteria.</p>
-        <button
-          (click)="filterStatus = 'All'; searchQuery = ''; filter()"
-          class="mt-4 text-emerald-600 font-bold hover:underline"
-        >
+        <button (click)="filterStatus = 'All'; searchQuery = ''; filter()"
+          class="mt-4 text-emerald-600 font-bold hover:underline">
           Clear Filters
         </button>
       </div>

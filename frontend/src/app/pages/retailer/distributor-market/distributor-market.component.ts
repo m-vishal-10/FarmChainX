@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-distributor-market',
@@ -9,58 +10,53 @@ import { RouterModule } from '@angular/router';
     templateUrl: './distributor-market.component.html'
 })
 export class DistributorMarketComponent implements OnInit {
-    // Mock data: items listed by distributors
-    marketItems = [
-        {
-            id: 501,
-            cropName: 'Premium Wheat',
-            distributor: 'Sikar Agro Distributors',
-            quantity: 500,
-            unit: 'kg',
-            pricePerUnit: 25,
-            quality: 'A+',
-            location: 'Sikar, RJ',
-            verified: true
-        },
-        {
-            id: 502,
-            cropName: 'Organic Rice',
-            distributor: 'Green Earth Supply',
-            quantity: 1000,
-            unit: 'kg',
-            pricePerUnit: 60,
-            quality: 'A',
-            location: 'Punjab',
-            verified: true
-        },
-        {
-            id: 505,
-            cropName: 'Potatoes (Large)',
-            distributor: 'Metro Wholesalers',
-            quantity: 2000,
-            unit: 'kg',
-            pricePerUnit: 18,
-            quality: 'B',
-            location: 'Agra, UP',
-            verified: true
-        }
-    ];
-
+    marketItems: any[] = [];
+    isLoading = true;
     purchasingId: number | null = null;
 
-    ngOnInit(): void { }
+    constructor(private http: HttpClient) { }
+
+    ngOnInit(): void {
+        this.fetchMarket();
+    }
+
+    fetchMarket() {
+        this.isLoading = true;
+        this.http.get<any[]>('/api/track/market/distributors').subscribe({
+            next: (data) => {
+                this.marketItems = data;
+                this.isLoading = false;
+            },
+            error: (err) => {
+                console.error('Error fetching market:', err);
+                this.isLoading = false;
+            }
+        });
+    }
 
     placeOrder(item: any) {
         if (confirm(`Place order for ${item.quantity} ${item.unit} of ${item.cropName} from ${item.distributor}?`)) {
             this.purchasingId = item.id;
 
-            // Simulating API call
-            setTimeout(() => {
-                alert(`✅ Order Placed Successfully!\n\nOrder ID: PO-${Date.now()}\nSupplier: ${item.distributor}`);
-                // Remove item to simulate purchase
-                this.marketItems = this.marketItems.filter(i => i.id !== item.id);
-                this.purchasingId = null;
-            }, 1500);
+            const payload = {
+                supplierId: item.distributorId,
+                quantity: item.quantity,
+                total: item.quantity * item.pricePerUnit
+            };
+
+            this.http.post('/api/retailer/orders/create', payload).subscribe({
+                next: (res: any) => {
+                    alert(`✅ Order Placed Successfully!\n\nOrder ID: PO-${res.orderId}\nSupplier: ${item.distributor}`);
+                    this.purchasingId = null;
+                    // Refresh market to reflect changes if necessary
+                    this.fetchMarket();
+                },
+                error: (err) => {
+                    console.error('Order failed', err);
+                    alert('Failed to place order.');
+                    this.purchasingId = null;
+                }
+            });
         }
     }
 }
