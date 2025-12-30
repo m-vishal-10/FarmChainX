@@ -81,15 +81,14 @@ export class AdminUsers implements OnInit {
    * Generates Tailwind CSS classes for high-contrast role badges.
    */
   roleClass(role: PrimaryRole): string {
-    // Colors are adjusted for maximum contrast (using -100 text on a dark background)
-    // Added ring for definition.
+    // Solid colors with white text for better visibility on light backgrounds
     switch (role) {
-      case 'ADMIN': return 'bg-purple-500/30 text-purple-100 ring-1 ring-purple-400/30';
-      case 'FARMER': return 'bg-emerald-500/30 text-emerald-100 ring-1 ring-emerald-400/30';
-      case 'DISTRIBUTOR': return 'bg-cyan-500/30 text-cyan-100 ring-1 ring-cyan-400/30';
-      case 'RETAILER': return 'bg-amber-500/30 text-amber-100 ring-1 ring-amber-400/30';
-      case 'CONSUMER': return 'bg-slate-500/30 text-slate-100 ring-1 ring-slate-400/30';
-      default: return 'bg-gray-500/30 text-gray-100 ring-1 ring-gray-400/30';
+      case 'ADMIN': return 'bg-purple-600 text-white ring-2 ring-purple-300';
+      case 'FARMER': return 'bg-emerald-600 text-white ring-2 ring-emerald-300';
+      case 'DISTRIBUTOR': return 'bg-cyan-600 text-white ring-2 ring-cyan-300';
+      case 'RETAILER': return 'bg-amber-600 text-white ring-2 ring-amber-300';
+      case 'CONSUMER': return 'bg-blue-600 text-white ring-2 ring-blue-300';
+      default: return 'bg-gray-600 text-white ring-2 ring-gray-300';
     }
   }
 

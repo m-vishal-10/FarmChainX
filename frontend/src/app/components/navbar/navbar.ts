@@ -46,6 +46,16 @@ export class Navbar {
     return this.auth.isAdmin();
   }
 
+  // Detect clicks to close user menu when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    // Close user menu if clicking outside of it
+    if (this.userMenuOpen && !target.closest('.relative')) {
+      this.userMenuOpen = false;
+    }
+  }
+
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
     this.userMenuOpen = false;

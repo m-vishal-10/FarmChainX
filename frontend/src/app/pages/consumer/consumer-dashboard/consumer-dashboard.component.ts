@@ -110,6 +110,8 @@ export class ConsumerDashboardComponent implements AfterViewInit, OnInit {
     this.isCartOpen.set(true);
   }
 
+  private chartInstance: Chart | null = null;
+
   updateChart(history: any[]) {
     if (!this.spendChartRef) return;
 
@@ -123,33 +125,67 @@ export class ConsumerDashboardComponent implements AfterViewInit, OnInit {
     const labels = Object.keys(categoryMap);
     const data = Object.values(categoryMap);
 
-    // Colors
+    // Premium gradient colors
     const colors = [
-      '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#8B5CF6', '#EC4899'
+      'rgba(16, 185, 129, 0.9)',   // Emerald
+      'rgba(59, 130, 246, 0.9)',   // Blue
+      'rgba(245, 158, 11, 0.9)',   // Amber
+      'rgba(139, 92, 246, 0.9)',   // Purple
+      'rgba(236, 72, 153, 0.9)',   // Pink
+      'rgba(14, 165, 233, 0.9)'    // Sky
     ];
 
     const ctx = this.spendChartRef.nativeElement.getContext('2d');
+    if (!ctx) return;
 
-    // If chart instance exists, destroy it maybe? 
-    // For simplicity, we create new one. Chart.js might complain if canvas is reused without destroy.
-    // Let's assume onInit/AfterViewInit overlap is avoided or we just draw once.
-    // Ideally store chart instance.
+    // Destroy previous chart instance if exists
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
 
-    new Chart(ctx, {
+    this.chartInstance = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: labels.length ? labels : ['No Data'],
         datasets: [{
           data: data.length ? data : [1],
           backgroundColor: data.length ? colors.slice(0, data.length) : ['#E5E7EB'],
-          borderWidth: 0
+          borderWidth: 3,
+          borderColor: '#ffffff',
+          hoverOffset: 10,
+          hoverBorderWidth: 4
         }]
       },
       options: {
         responsive: true,
-        cutout: '75%',
+        maintainAspectRatio: false,
+        cutout: '70%',
         plugins: {
-          legend: { position: 'right' }
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: {
+                size: 12,
+                weight: 600
+              },
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleFont: {
+              size: 14,
+              weight: 'bold'
+            },
+            bodyFont: {
+              size: 13
+            },
+            borderColor: 'rgba(255, 255, 255, 0.1)',
+            borderWidth: 1
+          }
         }
       }
     });

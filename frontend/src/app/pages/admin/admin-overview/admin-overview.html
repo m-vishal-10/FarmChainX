@@ -1,8 +1,14 @@
-<div class="max-w-7xl mx-auto p-4 sm:p-6">
-  <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
-    <h1 class="text-3xl font-bold text-black tracking-tight">System Overview</h1>
+<div class="max-w-7xl mx-auto p-6 sm:p-8">
+  <div class="flex justify-between items-center mb-8 border-b border-gray-200 pb-6">
+    <div>
+      <h1
+        class="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
+        <span class="text-4xl">📊</span> System Overview
+      </h1>
+      <p class="text-gray-600 mt-2 font-medium">Complete platform analytics and statistics</p>
+    </div>
     <div class="flex items-center space-x-4">
-      <span *ngIf="lastUpdated" class="text-xs text-gray-500">
+      <span *ngIf="lastUpdated" class="text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full font-semibold">
         Last updated: {{ lastUpdated | date : 'shortTime' }}
       </span>
     </div>

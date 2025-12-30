@@ -37,42 +37,37 @@
       <nav class="space-y-2">
         <a routerLink="/retailer/dashboard" routerLinkActive="bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium"
+          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium hover:bg-white/5"
           aria-current="page">
           <div class="flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             <span>Dashboard</span>
           </div>
-          <!-- <span class="text-xs md:text-sm bg-white/10 px-2 py-0.5 rounded-full">{{
-            counts.dashboard
-            }}</span> -->
         </a>
 
         <a routerLink="/retailer/inventory" routerLinkActive="bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium">
+          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium hover:bg-white/5">
           <div class="flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             <span>Inventory</span>
           </div>
-          <!-- <span class="text-xs md:text-sm bg-white/10 px-2 py-0.5 rounded-full">{{
-            counts.inventory
-            }}</span> -->
         </a>
 
         <a routerLink="/retailer/dispatched-products"
           routerLinkActive="bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium">
+          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium hover:bg-white/5">
           <div class="flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
             </svg>
             <span>Dispatched Products</span>
           </div>
@@ -80,38 +75,34 @@
 
         <a routerLink="/retailer/orders" routerLinkActive="bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium">
+          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium hover:bg-white/5">
           <div class="flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
             <span>Purchase Orders</span>
           </div>
-          <!-- <span class="text-xs md:text-sm bg-white/10 px-2 py-0.5 rounded-full">{{
-            counts.orders
-            }}</span> -->
         </a>
 
         <a routerLink="/retailer/shipments" routerLinkActive="bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium">
+          class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl transition-all duration-200 text-slate-300 text-base md:text-lg font-medium hover:bg-white/5">
           <div class="flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h13l4 8H6z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
             </svg>
             <span>Shipments</span>
           </div>
-          <!-- <span class="text-xs md:text-sm bg-white/10 px-2 py-0.5 rounded-full">{{
-            counts.shipments
-            }}</span> -->
         </a>
 
         <div class="border-t border-white/10 mt-4 pt-4"></div>
 
         <a routerLink="/dashboard"
-          class="flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-sm md:text-base font-medium text-slate-400">
+          class="flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-sm md:text-base font-medium text-slate-400 hover:text-slate-300 hover:bg-white/5">
           <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M3 11h18" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           <span>Back to App</span>
         </a>
