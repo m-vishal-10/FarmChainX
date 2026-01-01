@@ -83,12 +83,25 @@ JWT_SECRET
 kfKGYpOc66XxCorkcjJN3hWTUKxpnG8DI0fCFj8x2APcNE+u7GS7w==Tx5AtCtWKAn4Gf
 ```
 
+**10. Groq AI API Key** (for AI quality scoring)
+```
+GROQ_API_KEY
+[Paste your Groq API key here - get it from https://console.groq.com/keys]
+```
+
+> **How to get Groq API Key:**
+> 1. Visit https://console.groq.com
+> 2. Sign up for free account
+> 3. Go to API Keys section
+> 4. Click "Create API Key"
+> 5. Copy the key (starts with gsk_)
+
 ---
 
 ### ✅ Final Checks
 
 - [ ] Region is **Virginia (US East)** (matches database!)
-- [ ] All 9 environment variables added
+- [ ] All 10 environment variables added (including Groq API key for AI features)
 - [ ] Auto-Deploy is **Enabled**
 - [ ] Ready to click **"Create Web Service"**
 
