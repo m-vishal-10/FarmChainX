@@ -60,6 +60,9 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/verify/**").permitAll()
 
+                        // Allow CORS preflight (OPTIONS) requests for all endpoints
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         // Product-related public GETs
                         .requestMatchers("/api/products/*/qrcode/download").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/by-uuid/**").permitAll()
