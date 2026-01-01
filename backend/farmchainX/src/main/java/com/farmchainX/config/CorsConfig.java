@@ -24,7 +24,7 @@ public class CorsConfig {
                                 "https://farmchainx-frontend.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
-                        .exposedHeaders("Authorization")
+                        .exposedHeaders("Authorization", "Content-Type", "Content-Disposition")
                         .allowCredentials(true)
                         .maxAge(3600);
             }
