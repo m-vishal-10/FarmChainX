@@ -59,7 +59,7 @@ public class ProductController {
             ProductRepository productRepository,
             SupplyChainLogRepository supplyChainLogRepository,
             FeedbackRepository feedbackRepository,
-            com.farmchainX.farmchainX.service.GroqAIService groqAIService,
+            @org.springframework.beans.factory.annotation.Autowired(required = false) com.farmchainX.farmchainX.service.GroqAIService groqAIService,
             AIPredictionRepository aiPredictionRepository,
             RetailerInventoryRepository retailerInventoryRepository) {
         this.productService = productService;
@@ -150,56 +150,77 @@ public class ProductController {
             saved.ensurePublicUuid();
             productRepository.save(saved);
 
-            // Generate AI prediction using Groq
-            Map<String, Object> aiPrediction = groqAIService.generateFarmPrediction(saved);
+            // Generate AI prediction using Groq (if service available)
+            Map<String, Object> aiPrediction = new HashMap<>();
+            if (groqAIService != null) {
+                aiPrediction = groqAIService.generateFarmPrediction(saved);
+            } else {
+                // Fallback prediction when AI service is not available
+                aiPrediction.put("qualityGrade", "B");
+                aiPrediction.put("qualityScore", 75);
+                aiPrediction.put("confidence", 85);
+                aiPrediction.put("marketReadiness", "Ready for market");
+                aiPrediction.put("storageRecommendation", "Store in cool, dry place. Maintain proper ventilation.");
+                aiPrediction.put("optimalSellingWindow", "1-3 days after harvest");
+                aiPrediction.put("priceEstimate", "Market price varies");
+                aiPrediction.put("insights", Arrays.asList(
+                        "Product appears to be in good condition",
+                        "Monitor storage conditions regularly",
+                        "Consider local market demand"));
+                aiPrediction.put("warnings", new ArrayList<>());
+                aiPrediction.put("certificationEligibility", "Conventional");
+            }
 
-            // Save AI prediction to database
-            try {
-                AIPrediction prediction = new AIPrediction();
-                prediction.setProduct(saved);
-                prediction.setFarmer(farmer);
+            // Save AI prediction to database (only if prediction was generated)
+            if (!aiPrediction.isEmpty()) {
+                try {
+                    AIPrediction prediction = new AIPrediction();
+                    prediction.setProduct(saved);
+                    prediction.setFarmer(farmer);
 
-                // Store full prediction as JSON
-                String predictionJson = objectMapper.writeValueAsString(aiPrediction);
-                prediction.setPredictionData(predictionJson);
+                    // Store full prediction as JSON
+                    String predictionJson = objectMapper.writeValueAsString(aiPrediction);
+                    prediction.setPredictionData(predictionJson);
 
-                // Extract and store key fields for easier querying
-                if (aiPrediction.containsKey("qualityGrade")) {
-                    prediction.setQualityGrade(String.valueOf(aiPrediction.get("qualityGrade")));
-                }
-                if (aiPrediction.containsKey("qualityScore")) {
-                    Object score = aiPrediction.get("qualityScore");
-                    if (score instanceof Number) {
-                        prediction.setQualityScore(((Number) score).intValue());
+                    // Extract and store key fields for easier querying
+                    if (aiPrediction.containsKey("qualityGrade")) {
+                        prediction.setQualityGrade(String.valueOf(aiPrediction.get("qualityGrade")));
                     }
-                }
-                if (aiPrediction.containsKey("confidence")) {
-                    Object conf = aiPrediction.get("confidence");
-                    if (conf instanceof Number) {
-                        prediction.setConfidence(((Number) conf).intValue());
+                    if (aiPrediction.containsKey("qualityScore")) {
+                        Object score = aiPrediction.get("qualityScore");
+                        if (score instanceof Number) {
+                            prediction.setQualityScore(((Number) score).intValue());
+                        }
                     }
-                }
-                if (aiPrediction.containsKey("marketReadiness")) {
-                    prediction.setMarketReadiness(String.valueOf(aiPrediction.get("marketReadiness")));
-                }
-                if (aiPrediction.containsKey("storageRecommendation")) {
-                    prediction.setStorageRecommendation(String.valueOf(aiPrediction.get("storageRecommendation")));
-                }
-                if (aiPrediction.containsKey("optimalSellingWindow")) {
-                    prediction.setOptimalSellingWindow(String.valueOf(aiPrediction.get("optimalSellingWindow")));
-                }
-                if (aiPrediction.containsKey("priceEstimate")) {
-                    prediction.setPriceEstimate(String.valueOf(aiPrediction.get("priceEstimate")));
-                }
-                if (aiPrediction.containsKey("certificationEligibility")) {
-                    prediction
-                            .setCertificationEligibility(String.valueOf(aiPrediction.get("certificationEligibility")));
-                }
+                    if (aiPrediction.containsKey("confidence")) {
+                        Object conf = aiPrediction.get("confidence");
+                        if (conf instanceof Number) {
+                            prediction.setConfidence(((Number) conf).intValue());
+                        }
+                    }
+                    if (aiPrediction.containsKey("marketReadiness")) {
+                        prediction.setMarketReadiness(String.valueOf(aiPrediction.get("marketReadiness")));
+                    }
+                    if (aiPrediction.containsKey("storageRecommendation")) {
+                        prediction.setStorageRecommendation(String.valueOf(aiPrediction.get("storageRecommendation")));
+                    }
+                    if (aiPrediction.containsKey("optimalSellingWindow")) {
+                        prediction.setOptimalSellingWindow(String.valueOf(aiPrediction.get("optimalSellingWindow")));
+                    }
+                    if (aiPrediction.containsKey("priceEstimate")) {
+                        prediction.setPriceEstimate(String.valueOf(aiPrediction.get("priceEstimate")));
+                    }
+                    if (aiPrediction.containsKey("certificationEligibility")) {
+                        prediction
+                                .setCertificationEligibility(
+                                        String.valueOf(aiPrediction.get("certificationEligibility")));
+                    }
 
-                aiPredictionRepository.save(prediction);
-            } catch (Exception e) {
-                System.err.println("[AI Prediction Save Error] " + e.getMessage());
-                // Continue even if saving prediction fails
+                    aiPredictionRepository.save(prediction);
+                } catch (Exception e) {
+                    System.err.println("[AI Prediction Save Error] " + e.getMessage());
+                    // Continue even if saving prediction fails
+                }
             }
 
             Map<String, Object> response = new HashMap<>();

@@ -18,6 +18,7 @@ import com.farmchainX.farmchainX.model.Product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name = "groq.api.key", matchIfMissing = false)
 public class GroqAIService {
 
     private static final String GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -69,37 +70,36 @@ public class GroqAIService {
 
     private String buildFarmPredictionPrompt(Product product) {
         return String.format("""
-            Analyze this agricultural product and provide comprehensive insights:
-            
-            Product Details:
-            - Crop Name: %s
-            - Soil Type: %s
-            - Pesticides Used: %s
-            - Harvest Date: %s
-            - Location (GPS): %s
-            
-            Provide analysis in this exact JSON structure (return ONLY valid JSON, no markdown):
-            {
-              "qualityGrade": "A or B or C",
-              "qualityScore": 85,
-              "confidence": 92,
-              "marketReadiness": "Ready/Wait 3-5 days/Immediate sale recommended",
-              "storageRecommendation": "specific storage advice",
-              "optimalSellingWindow": "timeframe",
-              "priceEstimate": "price range in local currency",
-              "insights": ["insight1", "insight2", "insight3"],
-              "warnings": ["warning if any"],
-              "certificationEligibility": "Organic/Conventional/Premium"
-            }
-            
-            Consider soil quality, pesticide usage, freshness based on harvest date, and location climate.
-            """,
+                Analyze this agricultural product and provide comprehensive insights:
+
+                Product Details:
+                - Crop Name: %s
+                - Soil Type: %s
+                - Pesticides Used: %s
+                - Harvest Date: %s
+                - Location (GPS): %s
+
+                Provide analysis in this exact JSON structure (return ONLY valid JSON, no markdown):
+                {
+                  "qualityGrade": "A or B or C",
+                  "qualityScore": 85,
+                  "confidence": 92,
+                  "marketReadiness": "Ready/Wait 3-5 days/Immediate sale recommended",
+                  "storageRecommendation": "specific storage advice",
+                  "optimalSellingWindow": "timeframe",
+                  "priceEstimate": "price range in local currency",
+                  "insights": ["insight1", "insight2", "insight3"],
+                  "warnings": ["warning if any"],
+                  "certificationEligibility": "Organic/Conventional/Premium"
+                }
+
+                Consider soil quality, pesticide usage, freshness based on harvest date, and location climate.
+                """,
                 product.getCropName() != null ? product.getCropName() : "Unknown",
                 product.getSoilType() != null ? product.getSoilType() : "Unknown",
                 product.getPesticides() != null ? product.getPesticides() : "None",
                 product.getHarvestDate() != null ? product.getHarvestDate().toString() : "Unknown",
-                product.getGpsLocation() != null ? product.getGpsLocation() : "Unknown"
-        );
+                product.getGpsLocation() != null ? product.getGpsLocation() : "Unknown");
     }
 
     private Map<String, Object> parsePredictionResponse(Map<String, Object> apiResponse, Product product) {
@@ -124,11 +124,13 @@ public class GroqAIService {
             }
             if (!prediction.containsKey("qualityScore")) {
                 prediction.put("qualityScore", product.getConfidenceScore() != null
-                        ? (int) (product.getConfidenceScore() * 100) : 75);
+                        ? (int) (product.getConfidenceScore() * 100)
+                        : 75);
             }
             if (!prediction.containsKey("confidence")) {
                 prediction.put("confidence", product.getConfidenceScore() != null
-                        ? (int) (product.getConfidenceScore() * 100) : 85);
+                        ? (int) (product.getConfidenceScore() * 100)
+                        : 85);
             }
 
             return prediction;
@@ -170,9 +172,11 @@ public class GroqAIService {
         Map<String, Object> fallback = new HashMap<>();
         fallback.put("qualityGrade", product.getQualityGrade() != null ? product.getQualityGrade() : "B");
         fallback.put("qualityScore", product.getConfidenceScore() != null
-                ? (int) (product.getConfidenceScore() * 100) : 75);
+                ? (int) (product.getConfidenceScore() * 100)
+                : 75);
         fallback.put("confidence", product.getConfidenceScore() != null
-                ? (int) (product.getConfidenceScore() * 100) : 85);
+                ? (int) (product.getConfidenceScore() * 100)
+                : 85);
         fallback.put("marketReadiness", "Ready for market");
         fallback.put("storageRecommendation", "Store in cool, dry place. Maintain proper ventilation.");
         fallback.put("optimalSellingWindow", "1-3 days after harvest");
@@ -180,8 +184,7 @@ public class GroqAIService {
         fallback.put("insights", Arrays.asList(
                 "Product appears to be in good condition",
                 "Monitor storage conditions regularly",
-                "Consider local market demand"
-        ));
+                "Consider local market demand"));
         fallback.put("warnings", new ArrayList<>());
         fallback.put("certificationEligibility", "Conventional");
         return fallback;
