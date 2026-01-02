@@ -2,6 +2,8 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin-guard';
+import { AdminAnalytics } from './pages/admin/admin-analytics/admin-analytics';
+import { AdminSettings } from './pages/admin/admin-settings/admin-settings';
 
 export const routes: Routes = [
   {
@@ -137,6 +139,14 @@ export const routes: Routes = [
         path: 'logs',
         loadComponent: () =>
           import('./pages/admin/admin-logs/admin-logs').then((m) => m.AdminLogs),
+      },
+      {
+        path: 'analytics',
+        component: AdminAnalytics,
+      },
+      {
+        path: 'settings',
+        component: AdminSettings,
       },
 
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
