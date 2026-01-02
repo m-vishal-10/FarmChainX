@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminService } from '../../../services/admin.service';
 
 type PrimaryRole = 'ADMIN' | 'FARMER' | 'DISTRIBUTOR' | 'RETAILER' | 'CONSUMER' | 'USER';
 
@@ -28,7 +29,7 @@ export class AdminUsers implements OnInit {
   searchTerm: string = '';
   isLoading: boolean = false; // Manages the loading spinner/state
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private adminService: AdminService) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -51,7 +52,7 @@ export class AdminUsers implements OnInit {
 
   loadUsers(): void {
     this.isLoading = true;
-    this.http.get<any[]>('/api/admin/users').subscribe({
+    this.adminService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data.map(u => {
           const roles = (u.roles ?? []).map((r: any) => this.normalizeRole(r));
