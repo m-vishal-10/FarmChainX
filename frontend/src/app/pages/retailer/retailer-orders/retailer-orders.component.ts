@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 interface Order {
   id: string;
@@ -33,7 +34,7 @@ export class RetailerOrdersComponent {
   }
 
   fetchOrders() {
-    this.http.get<any[]>('/api/retailer/orders/all').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/retailer/orders/all`).subscribe({
       next: (data) => {
         this.orders = data.map(o => ({
           id: 'PO-' + o.id,

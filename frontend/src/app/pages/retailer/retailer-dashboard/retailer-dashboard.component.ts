@@ -3,6 +3,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
+import { environment } from '../../../../environments/environment';
 Chart.register(...registerables);
 
 @Component({
@@ -34,7 +35,7 @@ export class RetailerDashboardComponent implements AfterViewInit {
 
   fetchDashboardData() {
     // 1. Fetch Stats
-    this.http.get<any>('/api/retailer/dashboard-stats').subscribe({
+    this.http.get<any>(`${environment.apiUrl}/retailer/dashboard-stats`).subscribe({
       next: (data) => {
         this.stats = data;
       },
@@ -51,7 +52,7 @@ export class RetailerDashboardComponent implements AfterViewInit {
     });
 
     // 2. Fetch Sales Chart
-    this.http.get<any>('/api/retailer/sales-chart').subscribe({
+    this.http.get<any>(`${environment.apiUrl}/retailer/sales-chart`).subscribe({
       next: (data) => {
         // Check if data is valid before attempting to use it
         if (data && data.labels && data.values && data.labels.length > 0) {
@@ -77,7 +78,7 @@ export class RetailerDashboardComponent implements AfterViewInit {
     this.renderPieChart();
 
     // 4. Fetch Recent Orders
-    this.http.get<any>('/api/track/pending?size=5').subscribe({
+    this.http.get<any>(`${environment.apiUrl}/track/pending?size=5`).subscribe({
       next: (page) => {
         const orders = page.content || [];
         this.recentOrders = orders.map((o: any) => ({

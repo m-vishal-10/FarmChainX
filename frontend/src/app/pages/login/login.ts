@@ -15,6 +15,7 @@ import { environment } from '../../../environments/environment';
 export class Login {
   email = '';
   password = '';
+  showPassword = false;
 
   constructor(
     private http: HttpClient,

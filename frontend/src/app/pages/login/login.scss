@@ -1,0 +1,41 @@
+// Login Page Custom Styles
+
+// Input focus glow effect
+input:focus {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+// Button hover glow
+button:not(:disabled):hover {
+    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+}
+
+// Smooth transitions for all interactive elements
+a,
+button,
+input {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Card entrance animation
+.backdrop-blur-2xl {
+    animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Icon animation on focus
+.group:focus-within svg {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}

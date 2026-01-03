@@ -27,6 +27,10 @@ export class RegisterComponent {
   };
   passwordsMatch = false;
 
+  // Password visibility toggles
+  showPassword = false;
+  showConfirmPassword = false;
+
   submitting = false;
 
   constructor(private http: HttpClient, private router: Router) { }
