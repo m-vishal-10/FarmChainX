@@ -46,14 +46,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     loadComponent: () => import('./pages/my-products/my-products').then((m) => m.MyProducts),
   },
-  {
-    path: 'farmer/dashboard',
-    canActivate: [AuthGuard],
-    loadComponent: () =>
-      import('./pages/farmer/farmer-dashboard/farmer-dashboard.component').then(
-        (m) => m.FarmerDashboardComponent
-      ),
-  },
 
   // FARMER ROUTES
   {
@@ -62,7 +54,8 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./pages/farmer/farmer-dashboard/farmer-dashboard').then(m => m.FarmerDashboard)
+        loadComponent: () =>
+          import('./pages/farmer/farmer-dashboard/farmer-dashboard').then(m => m.FarmerDashboard)
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
