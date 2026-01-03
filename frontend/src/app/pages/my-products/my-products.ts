@@ -41,7 +41,7 @@ export class MyProducts {
     //
 
     this.http
-      .get<any>(`/api/products/my?page=${page}&size=${this.size}&sort=id,desc`)
+      .get<any>(`${environment.apiUrl}/products/my?page=${page}&size=${this.size}&sort=id,desc`)
       .pipe(
         retryWhen((errors) =>
           errors.pipe(
@@ -111,7 +111,7 @@ export class MyProducts {
   }
 
   generateQr(id: number) {
-    this.http.post<any>(`/api/products/${id}/qrcode`, {}).subscribe({
+    this.http.post<any>(`${environment.apiUrl}/products/${id}/qrcode`, {}).subscribe({
       next: (res) => {
         const product = this.products.find((p) => p.id === id)!;
         const url = res.qrPath.startsWith('http')

@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 interface AIPrediction {
   id: number;
@@ -39,7 +40,7 @@ export class FarmerDashboardComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.http.get<{ predictions: AIPrediction[]; total: number }>('/api/predictions/my').subscribe({
+    this.http.get<{ predictions: AIPrediction[]; total: number }>(`${environment.apiUrl}/predictions/my`).subscribe({
       next: (response) => {
         this.predictions = response.predictions || [];
         this.loading = false;
