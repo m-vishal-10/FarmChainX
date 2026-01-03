@@ -29,23 +29,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
   },
-  {
-    path: 'upload',
-    canActivate: [AuthGuard],
-    loadComponent: () =>
-      import('./pages/upload-product/upload-product').then((m) => m.UploadProduct),
-  },
-  {
-    path: 'scanner',
-    canActivate: [AuthGuard],
-    loadComponent: () =>
-      import('./components/qr-scanner/qr-scanner/qr-scanner').then((m) => m.QrScanner),
-  },
-  {
-    path: 'products/my',
-    canActivate: [AuthGuard],
-    loadComponent: () => import('./pages/my-products/my-products').then((m) => m.MyProducts),
-  },
 
   // FARMER ROUTES
   {
@@ -55,7 +38,22 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./pages/farmer/farmer-dashboard/farmer-dashboard').then(m => m.FarmerDashboard)
+          import('./pages/farmer/farmer-dashboard/farmer-dashboard.component').then(m => m.FarmerDashboardComponent)
+      },
+      {
+        path: 'upload',
+        loadComponent: () =>
+          import('./pages/upload-product/upload-product').then((m) => m.UploadProduct),
+      },
+      {
+        path: 'scanner',
+        loadComponent: () =>
+          import('./components/qr-scanner/qr-scanner/qr-scanner').then((m) => m.QrScanner),
+      },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./pages/my-products/my-products').then((m) => m.MyProducts),
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

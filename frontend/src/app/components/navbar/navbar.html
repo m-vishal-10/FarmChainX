@@ -36,7 +36,7 @@
         </ng-container>
 
         <ng-container *ngIf="isLoggedIn">
-          <a routerLink="/scanner"
+          <a routerLink="/farmer/scanner"
             class="group flex items-center gap-2 bg-emerald-600/90 hover:bg-emerald-700 text-white px-6 py-3 rounded-full shadow-lg hover:scale-105 transition">
             <svg class="w-5 h-5 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -46,8 +46,8 @@
           </a>
 
           <ng-container *ngIf="isFarmer">
-            <a routerLink="/upload" class="text-gray-200 hover:text-white transition">Upload</a>
-            <a routerLink="/products/my" class="text-gray-200 hover:text-white transition">My Products</a>
+            <a routerLink="/farmer/upload" class="text-gray-200 hover:text-white transition">Upload</a>
+            <a routerLink="/farmer/products" class="text-gray-200 hover:text-white transition">My Products</a>
           </ng-container>
 
           <a *ngIf="isAdmin" routerLink="/admin"
@@ -155,7 +155,7 @@
             'bg-white border-gray-100 divide-gray-100': isScrolled,
             'bg-gray-800 border-gray-700 divide-gray-700': !isScrolled
           }">
-          <a routerLink="/scanner" (click)="closeMobileMenu()"
+          <a routerLink="/farmer/scanner" (click)="closeMobileMenu()"
             class="flex items-center gap-3 px-4 py-4 hover:bg-gray-50" [ngClass]="{
               'text-gray-700 hover:bg-gray-50': isScrolled,
               'text-white hover:bg-gray-700': !isScrolled
@@ -170,7 +170,7 @@
             </svg>
           </a>
 
-          <a *ngIf="isFarmer" routerLink="/upload" (click)="closeMobileMenu()"
+          <a *ngIf="isFarmer" routerLink="/farmer/upload" (click)="closeMobileMenu()"
             class="flex items-center gap-3 px-4 py-4 hover:bg-gray-50" [ngClass]="{
               'text-gray-700 hover:bg-gray-50': isScrolled,
               'text-white hover:bg-gray-700': !isScrolled
@@ -184,7 +184,7 @@
             </svg>
           </a>
 
-          <a *ngIf="isFarmer" routerLink="/products/my" (click)="closeMobileMenu()"
+          <a *ngIf="isFarmer" routerLink="/farmer/products" (click)="closeMobileMenu()"
             class="flex items-center gap-3 px-4 py-4 hover:bg-gray-50" [ngClass]="{
               'text-gray-700 hover:bg-gray-50': isScrolled,
               'text-white hover:bg-gray-700': !isScrolled

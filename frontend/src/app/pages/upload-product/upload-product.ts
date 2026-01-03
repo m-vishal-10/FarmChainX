@@ -131,7 +131,7 @@ export class UploadProduct {
           } else {
             // Fallback if no AI prediction
             alert(`Product uploaded! ID = ${res.id}`);
-            this.router.navigate(['/products/my']);
+            this.router.navigate(['/farmer/products']);
           }
         },
         error: (err) => {
@@ -177,7 +177,7 @@ export class UploadProduct {
 
   closePredictionModal() {
     this.showPrediction = false;
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/farmer/dashboard']);
   }
 
   getQualityColor(grade: string): string {
