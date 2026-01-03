@@ -61,8 +61,9 @@ export class QrScanner {
   uploadedImageUrl: string | null = null;
   scanResult: string | null = null;
   cameraStatus: CameraStatus = 'initializing'; // New state property
+  isNavigating = false; // New: loading state for navigation
 
-  constructor() {}
+  constructor() { }
 
   // Start camera scanning
   startCameraScan() {
@@ -84,6 +85,7 @@ export class QrScanner {
   // Navigate to product details
   viewDetails() {
     if (this.scanResult) {
+      this.isNavigating = true;
       // Improved matching: Checks for the UUID structure and handles both full URLs and just the UUID
       const match = this.scanResult.match(
         /verify\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i
@@ -96,12 +98,32 @@ export class QrScanner {
 
       if (idToNavigate) {
         // Use a relative path to ensure it works correctly
-        this.router.navigate(['/verify', idToNavigate]);
+        this.router.navigate(['/verify', idToNavigate]).then(
+          (success) => {
+            if (!success) {
+              this.isNavigating = false;
+              alert(
+                'Navigation failed. Please try scanning the QR code again or check your internet connection.'
+              );
+            }
+          },
+          (error) => {
+            this.isNavigating = false;
+            console.error('Navigation error:', error);
+            alert(
+              'An error occurred while navigating to the product details. Please try again.'
+            );
+          }
+        );
       } else {
+        this.isNavigating = false;
         // Fallback for non-standard QR codes (e.g., just a URL/text without the expected format)
         alert(
-          'Could not extract a valid verification ID from the scanned QR code. Result was: ' +
-            this.scanResult
+          '⚠️ Invalid QR Code Format\n\n' +
+          'This QR code does not contain a valid FarmChainX product verification code.\n\n' +
+          'Expected format: A UUID like "12345678-1234-1234-1234-123456789abc"\n\n' +
+          'Scanned result: ' + this.scanResult.substring(0, 100) +
+          (this.scanResult.length > 100 ? '...' : '')
         );
       }
     }
@@ -118,6 +140,16 @@ export class QrScanner {
   onScanError(err: any) {
     console.error('Scan error:', err);
     this.cameraStatus = 'error'; // Set status on error
+    // Only show alert for critical errors, not for "NotFoundException" which is normal when no QR is in view
+    if (err && err.name && err.name !== 'NotFoundException') {
+      alert(
+        '⚠️ Camera Error\n\n' +
+        'There was an issue accessing your camera. Please ensure:\n' +
+        '1. You have granted camera permissions\n' +
+        '2. No other application is using the camera\n' +
+        '3. Your camera is properly connected'
+      );
+    }
   }
 
   // If camera permission denied or granted
@@ -162,8 +194,17 @@ export class QrScanner {
           codeReader
             .decodeFromImageElement(img)
             .then(r => this.onScanSuccess(r.getText()))
-            .catch(() => {
-              alert('No QR code found in the image. Try again with a clearer photo.');
+            .catch((error) => {
+              console.error('QR decode error:', error);
+              alert(
+                '⚠️ No QR Code Found\n\n' +
+                'The uploaded image does not contain a valid QR code or the QR code is not clear enough.\n\n' +
+                'Tips for better results:\n' +
+                '• Ensure good lighting\n' +
+                '• Keep the camera steady\n' +
+                '• Make sure the entire QR code is visible\n' +
+                '• Avoid glare or reflections on the QR code'
+              );
               this.restart();
             });
         };
@@ -180,6 +221,7 @@ export class QrScanner {
     this.uploadedImageUrl = null;
     this.torchEnabled = false;
     this.scanResult = null;
+    this.isNavigating = false; // Reset navigation state
     this.cameraStatus = 'initializing'; // Reset status
   }
 }

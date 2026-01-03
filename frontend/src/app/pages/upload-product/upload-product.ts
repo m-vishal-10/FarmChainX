@@ -45,6 +45,29 @@ export class UploadProduct {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
 
+    // Validate file type
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validImageTypes.includes(file.type)) {
+      alert(
+        '⚠️ Invalid File Type\n\n' +
+        'Please select a valid image file.\n\n' +
+        'Accepted formats: JPG, JPEG, PNG, WEBP'
+      );
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSizeInBytes) {
+      alert(
+        '⚠️ File Too Large\n\n' +
+        `File size: ${(file.size / 1024 / 1024).toFixed(2)} MB\n` +
+        'Maximum allowed size: 5 MB\n\n' +
+        'Please compress your image or choose a smaller file.'
+      );
+      return;
+    }
+
     this.imageFile = file;
     const reader = new FileReader();
     reader.onload = () => this.previewUrl = reader.result;
@@ -116,8 +139,38 @@ export class UploadProduct {
           console.error('Upload error full:', err);
           console.error('Status:', err?.status);
           console.error('Error body:', err?.error);
-          const serverMsg = err?.error?.message || err?.error?.error || err?.statusText || (err?.message ? err.message : 'Upload failed!');
-          alert(`Upload failed: ${serverMsg}`);
+
+          let errorMessage = '❌ Upload Failed\n\n';
+
+          if (err?.status === 0) {
+            errorMessage += 'Network Error\n\n' +
+              'Unable to connect to the server. Please check:\n' +
+              '• Your internet connection\n' +
+              '• Server is running\n' +
+              '• No firewall blocking the connection';
+          } else if (err?.status === 401 || err?.status === 403) {
+            errorMessage += 'Authentication Error\n\n' +
+              'You are not authorized to upload products.\n' +
+              'Please log in again as a Farmer.';
+          } else if (err?.status === 413) {
+            errorMessage += 'File Too Large\n\n' +
+              'The image file is too large for the server.\n' +
+              'Please compress your image and try again.';
+          } else if (err?.status === 415) {
+            errorMessage += 'Unsupported File Type\n\n' +
+              'The server does not accept this file type.\n' +
+              'Please upload a JPG, PNG, or WEBP image.';
+          } else if (err?.status === 500) {
+            errorMessage += 'Server Error\n\n' +
+              'The server encountered an error.\n' +
+              'This might be a temporary issue. Please try again.\n\n' +
+              (err?.error?.message || err?.error?.error || 'Internal server error');
+          } else {
+            const serverMsg = err?.error?.message || err?.error?.error || err?.statusText || 'Unknown error';
+            errorMessage += `Error: ${serverMsg}`;
+          }
+
+          alert(errorMessage);
         }
       });
   }

@@ -31,6 +31,39 @@ export interface UserDto {
   roles: string[];
 }
 
+export interface AdminAnalytics {
+  userGrowth: { date: string; count: number }[];
+  productsByStatus: { [key: string]: number };
+  supplyChainMetrics: {
+    totalTransfers: number;
+    confirmedTransfers: number;
+    pendingTransfers: number;
+    rejectedTransfers: number;
+    transfersByRole: { [key: string]: number };
+  };
+  activitySummary: {
+    todayRegistrations: number;
+    todayProducts: number;
+    todayTransactions: number;
+    averageTransferTime: number;
+  };
+}
+
+export interface SystemSettings {
+  applicationVersion: string;
+  databaseStatus: string;
+  uptime: number;
+  totalUsers: number;
+  totalProducts: number;
+  totalTransactions: number;
+  registrationEnabled: boolean;
+  maintenanceMode: boolean;
+  emailNotificationsEnabled: boolean;
+  maxUploadSize: number;
+  sessionTimeout: number;
+  defaultUserRole: string;
+}
+
 
 
 @Injectable({
@@ -56,6 +89,18 @@ export class AdminService {
 
   promoteUser(userId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/promote/${userId}`, {});
+  }
+
+  getAnalytics(): Observable<AdminAnalytics> {
+    return this.http.get<AdminAnalytics>(`${this.baseUrl}/analytics`);
+  }
+
+  getSettings(): Observable<SystemSettings> {
+    return this.http.get<SystemSettings>(`${this.baseUrl}/settings`);
+  }
+
+  updateSettings(settings: SystemSettings): Observable<SystemSettings> {
+    return this.http.post<SystemSettings>(`${this.baseUrl}/settings`, settings);
   }
 
 

@@ -1,0 +1,177 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 p-6">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-extrabold text-white mb-2">
+            ⚙️ System Settings
+        </h1>
+        <p class="text-slate-300">Configure your FarmChainX platform</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+        <p class="text-white mt-4">Loading settings...</p>
+    </div>
+
+    <!-- Settings Content -->
+    <div *ngIf="!isLoading && settings" class="space-y-6">
+
+        <!-- System Information (Read-only) -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                System Information
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <p class="text-slate-400 text-sm">Application Version</p>
+                    <p class="text-white text-lg font-semibold mt-1">{{settings.applicationVersion}}</p>
+                </div>
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <p class="text-slate-400 text-sm">Database Status</p>
+                    <p class="text-emerald-400 text-lg font-semibold mt-1 flex items-center gap-2">
+                        <span class="h-2 w-2 bg-emerald-400 rounded-full"></span>
+                        {{settings.databaseStatus}}
+                    </p>
+                </div>
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <p class="text-slate-400 text-sm">System Uptime</p>
+                    <p class="text-white text-lg font-semibold mt-1">{{formatUptime(settings.uptime)}}</p>
+                </div>
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <p class="text-slate-400 text-sm">Total Users</p>
+                    <p class="text-white text-lg font-semibold mt-1">{{settings.totalUsers}}</p>
+                </div>
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <p class="text-slate-400 text-sm">Total Products</p>
+                    <p class="text-white text-lg font-semibold mt-1">{{settings.totalProducts}}</p>
+                </div>
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <p class="text-slate-400 text-sm">Total Transactions</p>
+                    <p class="text-white text-lg font-semibold mt-1">{{settings.totalTransactions}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Toggles -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                Feature Toggles
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Registration Toggle -->
+                <div class="flex items-center justify-between bg-slate-800/50 rounded-lg p-4">
+                    <div>
+                        <p class="text-white font-semibold">User Registration</p>
+                        <p class="text-slate-400 text-sm">Allow new users to register</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" [(ngModel)]="settings.registrationEnabled" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Maintenance Mode Toggle -->
+                <div class="flex items-center justify-between bg-slate-800/50 rounded-lg p-4">
+                    <div>
+                        <p class="text-white font-semibold">Maintenance Mode</p>
+                        <p class="text-slate-400 text-sm">Put system in maintenance mode</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" [(ngModel)]="settings.maintenanceMode" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Email Notifications Toggle -->
+                <div class="flex items-center justify-between bg-slate-800/50 rounded-lg p-4">
+                    <div>
+                        <p class="text-white font-semibold">Email Notifications</p>
+                        <p class="text-slate-400 text-sm">Send email notifications to users</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" [(ngModel)]="settings.emailNotificationsEnabled" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Application Configuration
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Max Upload Size -->
+                <div>
+                    <label class="block text-white font-semibold mb-2">Max Upload Size (MB)</label>
+                    <input type="number" [(ngModel)]="settings.maxUploadSize"
+                        class="w-full bg-slate-800/50 border border-slate-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        min="1" max="100" />
+                    <p class="text-slate-400 text-sm mt-1">Maximum file upload size</p>
+                </div>
+
+                <!-- Session Timeout -->
+                <div>
+                    <label class="block text-white font-semibold mb-2">Session Timeout (minutes)</label>
+                    <input type="number" [(ngModel)]="settings.sessionTimeout"
+                        class="w-full bg-slate-800/50 border border-slate-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        min="5" max="120" />
+                    <p class="text-slate-400 text-sm mt-1">User session timeout duration</p>
+                </div>
+
+                <!-- Default User Role -->
+                <div>
+                    <label class="block text-white font-semibold mb-2">Default User Role</label>
+                    <select [(ngModel)]="settings.defaultUserRole"
+                        class="w-full bg-slate-800/50 border border-slate-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="ROLE_CONSUMER">Consumer</option>
+                        <option value="ROLE_FARMER">Farmer</option>
+                        <option value="ROLE_DISTRIBUTOR">Distributor</option>
+                        <option value="ROLE_RETAILER">Retailer</option>
+                    </select>
+                    <p class="text-slate-400 text-sm mt-1">Default role for new users</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div
+            class="flex items-center justify-between bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20">
+            <div>
+                <p *ngIf="saveMessage" class="text-emerald-400 font-semibold">{{saveMessage}}</p>
+            </div>
+            <button (click)="saveSettings()" [disabled]="isSaving"
+                class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                <svg *ngIf="!isSaving" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <div *ngIf="isSaving" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                {{isSaving ? 'Saving...' : 'Save Settings'}}
+            </button>
+        </div>
+    </div>
+</div>

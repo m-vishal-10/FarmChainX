@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 // Import map for the retry logic fix
 import { catchError, delay, retryWhen, scan, throwError, map } from 'rxjs';
 import { TitleCasePipe, DecimalPipe } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 // Define the type for the scan accumulator to make the logic clear
 interface RetryState {
@@ -115,7 +116,7 @@ export class MyProducts {
         const product = this.products.find((p) => p.id === id)!;
         const url = res.qrPath.startsWith('http')
           ? res.qrPath
-          : `http://localhost:8080${res.qrPath}`;
+          : `${environment.baseUrl}${res.qrPath}`;
         const filename = this.generateFilename(product);
 
         // Download the QR code automatically
@@ -213,11 +214,11 @@ export class MyProducts {
   }
 
   getImageUrl(path: string): string {
-    return path?.startsWith('http') ? path : `http://localhost:8080${path}`;
+    return path?.startsWith('http') ? path : `${environment.baseUrl}${path}`;
   }
 
   getQrUrl(path: string): string {
-    return path?.startsWith('http') ? path : `http://localhost:8080${path}`;
+    return path?.startsWith('http') ? path : `${environment.baseUrl}${path}`;
   }
 
   formatDate(date: string | null): string {
