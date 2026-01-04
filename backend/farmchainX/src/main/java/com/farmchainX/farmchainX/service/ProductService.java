@@ -298,6 +298,7 @@ public class ProductService {
                     Map<String, Object> map = new HashMap<>();
                     map.put("id", product.getId());
                     map.put("cropName", product.getCropName());
+                    map.put("soilType", product.getSoilType()); // ✅ FIX: Added soilType field
                     map.put("price", product.getPrice());
                     map.put("imagePath", product.getImagePath());
                     map.put("harvestDate", product.getHarvestDate());

@@ -62,14 +62,19 @@ public class FarmerController {
                 if (isSold) {
                     soldProducts++;
                     // For sold products, add to revenue
-                    if (product.getPrice() != null && product.getQuantity() != null) {
-                        totalRevenue += product.getPrice() * product.getQuantity();
+                    // ✅ FIX: Better handling of null/zero values
+                    Double price = product.getPrice();
+                    Double quantity = product.getQuantity();
+                    if (price != null && price > 0 && quantity != null && quantity > 0) {
+                        totalRevenue += price * quantity;
                     }
                 } else {
                     activeProducts++;
                     // For active products, add to estimated value
-                    if (product.getPrice() != null && product.getQuantity() != null) {
-                        estimatedValue += product.getPrice() * product.getQuantity();
+                    Double price = product.getPrice();
+                    Double quantity = product.getQuantity();
+                    if (price != null && price > 0 && quantity != null && quantity > 0) {
+                        estimatedValue += price * quantity;
                     }
                 }
             }
@@ -82,6 +87,13 @@ public class FarmerController {
             stats.put("totalRevenue", totalRevenue);
             stats.put("estimatedValue", estimatedValue);
             stats.put("farmerName", farmer.getName());
+
+            // ✅ Add debug logging
+            System.out.println("[FARMER STATS] User: " + email +
+                    " | Total: " + totalProducts +
+                    " | Sold: " + soldProducts +
+                    " | Active: " + activeProducts +
+                    " | Revenue: ₹" + totalRevenue);
 
             return ResponseEntity.ok(stats);
 
