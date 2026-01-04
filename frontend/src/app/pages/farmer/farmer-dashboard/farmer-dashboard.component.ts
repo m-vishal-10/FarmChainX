@@ -19,6 +19,15 @@ interface AIPrediction {
   fullPrediction?: any;
 }
 
+interface FarmerStats {
+  totalProducts: number;
+  soldProducts: number;
+  activeProducts: number;
+  totalRevenue: number;
+  estimatedValue: number;
+  farmerName: string;
+}
+
 @Component({
   selector: 'app-farmer-dashboard',
   standalone: true,
@@ -28,29 +37,58 @@ interface AIPrediction {
 export class FarmerDashboardComponent implements OnInit {
   private http = inject(HttpClient);
 
+  // Statistics data
+  stats: FarmerStats | null = null;
+  statsLoading = true;
+  statsError: string | null = null;
+
+  // Predictions data
   predictions: AIPrediction[] = [];
-  loading = true;
-  error: string | null = null;
+  predictionsLoading = true;
+  predictionsError: string | null = null;
 
   ngOnInit(): void {
+    this.loadStats();
     this.loadPredictions();
   }
 
+  loadStats(): void {
+    this.statsLoading = true;
+    this.statsError = null;
+
+    this.http.get<FarmerStats>(`${environment.apiUrl}/farmer/stats`).subscribe({
+      next: (data) => {
+        this.stats = data;
+        this.statsLoading = false;
+      },
+      error: (err) => {
+        this.statsError = err.error?.error || 'Failed to load statistics';
+        this.statsLoading = false;
+        console.error('Error loading stats:', err);
+      },
+    });
+  }
+
   loadPredictions(): void {
-    this.loading = true;
-    this.error = null;
+    this.predictionsLoading = true;
+    this.predictionsError = null;
 
     this.http.get<{ predictions: AIPrediction[]; total: number }>(`${environment.apiUrl}/predictions/my`).subscribe({
       next: (response) => {
         this.predictions = response.predictions || [];
-        this.loading = false;
+        this.predictionsLoading = false;
       },
       error: (err) => {
-        this.error = err.error?.error || 'Failed to load predictions';
-        this.loading = false;
+        this.predictionsError = err.error?.error || 'Failed to load predictions';
+        this.predictionsLoading = false;
         console.error('Error loading predictions:', err);
       },
     });
+  }
+
+  formatCurrency(value: number | null | undefined): string {
+    if (!value) return '₹0';
+    return '₹' + value.toLocaleString('en-IN', { maximumFractionDigits: 2 });
   }
 
   formatDate(dateString: string): string {
@@ -81,4 +119,5 @@ export class FarmerDashboardComponent implements OnInit {
     return 'bg-red-100 text-red-800';
   }
 }
+
 

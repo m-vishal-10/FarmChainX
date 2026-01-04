@@ -1,52 +1,119 @@
 <div class="p-6 space-y-8">
-  <!-- Welcome banner -->
-  <div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white shadow">
+  <!-- Welcome Header -->
+  <div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white shadow-lg">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
       <div>
-        <h2 class="text-2xl font-bold mb-2">AI Predictions Dashboard 🌾</h2>
+        <h2 class="text-3xl font-bold mb-2 flex items-center gap-3">
+          🌾 Farmer Dashboard
+        </h2>
         <p class="opacity-90 max-w-2xl">
-          View AI-powered insights and predictions for all your products. Get recommendations on market readiness, storage, and optimal selling windows.
+          Track your products, revenue, and AI-powered insights all in one place
         </p>
       </div>
       <button
-        (click)="loadPredictions()"
-        class="mt-4 md:mt-0 inline-flex items-center bg-white text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 shadow"
+        (click)="loadStats(); loadPredictions()"
+        class="mt-4 md:mt-0 inline-flex items-center bg-white text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 shadow transition-all"
       >
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
-        Refresh
+        Refresh All
       </button>
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="flex items-center justify-center py-12">
-    <div class="text-center">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
-      <p class="text-gray-600">Loading predictions...</p>
+  <!-- Statistics Overview Cards -->
+  <div>
+    <h3 class="text-2xl font-bold text-gray-900 mb-4">📊 Overview Statistics</h3>
+    
+    <!-- Loading State for Stats -->
+    <div *ngIf="statsLoading" class="flex items-center justify-center py-12">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
+        <p class="text-gray-600">Loading statistics...</p>
+      </div>
+    </div>
+
+    <!-- Error State for Stats -->
+    <div *ngIf="statsError && !statsLoading" class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        <p class="text-red-800">{{ statsError }}</p>
+      </div>
+    </div>
+
+    <!-- Statistics Cards Grid -->
+    <div *ngIf="stats && !statsLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Total Products Card -->
+      <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
+        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+          <h3 class="text-blue-300 text-lg font-semibold">Total Products</h3>
+          <p class="text-6xl font-black mt-4 text-white">{{ stats.totalProducts }}</p>
+          <p class="text-blue-400 mt-2 text-md">Uploaded to platform</p>
+        </div>
+      </div>
+
+      <!-- Sold Products Card -->
+      <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
+        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+          <h3 class="text-emerald-300 text-lg font-semibold">Sold Products</h3>
+          <p class="text-6xl font-black mt-4 text-white">{{ stats.soldProducts }}</p>
+          <p class="text-emerald-400 mt-2 text-md">In supply chain</p>
+        </div>
+      </div>
+
+      <!-- Active Products Card -->
+      <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 to-pink-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
+        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+          <h3 class="text-purple-300 text-lg font-semibold">Active Products</h3>
+          <p class="text-6xl font-black mt-4 text-white">{{ stats.activeProducts }}</p>
+          <p class="text-purple-400 mt-2 text-md">Available for sale</p>
+        </div>
+      </div>
+
+      <!-- Total Revenue Card -->
+      <div class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-600 to-orange-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
+        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
+          <h3 class="text-yellow-300 text-lg font-semibold">Total Revenue</h3>
+          <p class="text-4xl font-black mt-4 text-white">{{ formatCurrency(stats.totalRevenue) }}</p>
+          <p class="text-yellow-400 mt-2 text-md">From sold products</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="error && !loading" class="bg-red-50 border border-red-200 rounded-lg p-4">
-    <div class="flex items-center">
-      <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-      </svg>
-      <p class="text-red-800">{{ error }}</p>
-    </div>
-  </div>
+  <!-- AI Predictions Section -->
+  <div>
+    <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      🤖 AI Predictions & Insights
+    </h3>
 
-  <!-- Predictions List -->
-  <div *ngIf="!loading && !error">
-    <div class="mb-4 flex items-center justify-between">
-      <h3 class="text-xl font-semibold text-gray-900">
-        All Predictions ({{ predictions.length }})
-      </h3>
+    <!-- Loading State for Predictions -->
+    <div *ngIf="predictionsLoading" class="flex items-center justify-center py-12">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
+        <p class="text-gray-600">Loading AI predictions...</p>
+      </div>
     </div>
 
-    <div *ngIf="predictions.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
+    <!-- Error State for Predictions -->
+    <div *ngIf="predictionsError && !predictionsLoading" class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        <p class="text-red-800">{{ predictionsError }}</p>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!predictionsLoading && !predictionsError && predictions.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
       <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
       </svg>
@@ -54,7 +121,8 @@
       <p class="text-gray-500">Upload products to get AI predictions and insights.</p>
     </div>
 
-    <div *ngIf="predictions.length > 0" class="space-y-4">
+    <!-- Predictions List -->
+    <div *ngIf="!predictionsLoading && !predictionsError && predictions.length > 0" class="space-y-4">
       <div
         *ngFor="let prediction of predictions"
         class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border-l-4"
@@ -149,4 +217,3 @@
     </div>
   </div>
 </div>
-
