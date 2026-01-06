@@ -5,7 +5,7 @@
   }">
   <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
     <div class="flex items-center justify-between h-18">
-      <a routerLink="/" class="flex items-center gap-3">
+      <a routerLink="/" class="flex items-center gap-3 mr-auto">
         <svg class="w-7 h-7 text-white transition duration-500" [ngClass]="{
             'text-emerald-600': isScrolled,
             'text-white': !isScrolled
@@ -22,15 +22,15 @@
         </div>
       </a>
 
-      <div class="hidden md:flex items-center gap-15 text-lg font-bold">
+      <div class="hidden md:flex items-center gap-6 text-lg font-bold">
         <ng-container *ngIf="!isLoggedIn">
           <a routerLink="/login"
-            class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2.5 rounded-full font-semibold shadow-xl hover:scale-105 transition">
+            class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-full font-semibold shadow-xl hover:scale-105 transition text-lg">
             Login
           </a>
 
           <a routerLink="/register"
-            class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2.5 rounded-full font-semibold shadow-xl hover:scale-105 transition">
+            class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-full font-semibold shadow-xl hover:scale-105 transition text-lg">
             Register
           </a>
         </ng-container>
