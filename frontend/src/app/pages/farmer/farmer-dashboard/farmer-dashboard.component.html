@@ -23,7 +23,13 @@
 
   <!-- Statistics Overview Cards -->
   <div>
-    <h3 class="text-2xl font-bold text-gray-900 mb-4">📊 Overview Statistics</h3>
+    <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+      <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+      Overview Statistics
+    </h3>
 
     <!-- Loading State for Stats -->
     <div *ngIf="statsLoading" class="flex items-center justify-center py-12">
@@ -47,47 +53,130 @@
 
     <!-- Statistics Cards Grid -->
     <div *ngIf="stats && !statsLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Total Products Card -->
+      <!-- Total Products Card - Green Theme -->
       <div
-        class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
-        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
-          <h3 class="text-blue-300 text-lg font-semibold">Total Products</h3>
-          <p class="text-6xl font-black mt-4 text-white">{{ stats.totalProducts }}</p>
-          <p class="text-blue-400 mt-2 text-md">Uploaded to platform</p>
+        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-emerald-100">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid-total" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="1" fill="currentColor" class="text-emerald-400" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid-total)" />
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <div class="mb-4">
+            <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+          </div>
+          <h3 class="text-emerald-700 text-sm font-bold uppercase tracking-wide mb-3">Total Products</h3>
+          <p class="text-5xl font-black text-emerald-600 mb-3">{{ stats.totalProducts }}</p>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <span class="text-emerald-700 text-sm font-semibold">Uploaded to platform</span>
+          </div>
         </div>
       </div>
 
-      <!-- Sold Products Card -->
+      <!-- Sold Products Card - Blue Theme -->
       <div
-        class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
-        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
-          <h3 class="text-emerald-300 text-lg font-semibold">Sold Products</h3>
-          <p class="text-6xl font-black mt-4 text-white">{{ stats.soldProducts }}</p>
-          <p class="text-emerald-400 mt-2 text-md">In supply chain</p>
+        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-blue-100">
+        <div class="absolute inset-0 opacity-10">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid-sold" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="1" fill="currentColor" class="text-blue-400" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid-sold)" />
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <div class="mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-blue-700 text-sm font-bold uppercase tracking-wide mb-3">Sold Products</h3>
+          <p class="text-5xl font-black text-blue-600 mb-3">{{ stats.soldProducts }}</p>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-blue-700 text-sm font-semibold">In supply chain</span>
+          </div>
         </div>
       </div>
 
-      <!-- Active Products Card -->
+      <!-- Active Products Card - Purple Theme -->
       <div
-        class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 to-pink-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
-        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
-          <h3 class="text-purple-300 text-lg font-semibold">Active Products</h3>
-          <p class="text-6xl font-black mt-4 text-white">{{ stats.activeProducts }}</p>
-          <p class="text-purple-400 mt-2 text-md">Available for sale</p>
+        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-purple-100">
+        <div class="absolute inset-0 opacity-10">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid-active" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="1" fill="currentColor" class="text-purple-400" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid-active)" />
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <div class="mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-purple-700 text-sm font-bold uppercase tracking-wide mb-3">Active Products</h3>
+          <p class="text-5xl font-black text-purple-600 mb-3">{{ stats.activeProducts }}</p>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-purple-700 text-sm font-semibold">Available for sale</span>
+          </div>
         </div>
       </div>
 
-      <!-- Total Revenue Card -->
+      <!-- Total Revenue Card - Orange/Red Theme -->
       <div
-        class="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-600 to-orange-700 p-1 shadow-2xl transform hover:scale-105 transition-all duration-500">
-        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition"></div>
-        <div class="relative bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8">
-          <h3 class="text-yellow-300 text-lg font-semibold">Total Revenue</h3>
-          <p class="text-4xl font-black mt-4 text-white">{{ formatCurrency(stats.totalRevenue) }}</p>
-          <p class="text-yellow-400 mt-2 text-md">From sold products</p>
+        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-orange-100">
+        <div class="absolute inset-0 opacity-10">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid-revenue" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="1" fill="currentColor" class="text-orange-400" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid-revenue)" />
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <div class="mb-4">
+            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-orange-700 text-sm font-bold uppercase tracking-wide mb-3">Total Revenue</h3>
+          <p class="text-4xl font-black text-orange-600 mb-3">{{ formatCurrency(stats.totalRevenue) }}</p>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-orange-700 text-sm font-semibold">From sold products</span>
+          </div>
         </div>
       </div>
     </div>
@@ -95,8 +184,12 @@
 
   <!-- AI Predictions Section -->
   <div>
-    <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-      🤖 AI Predictions & Insights
+    <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+      <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+      AI Predictions & Insights
     </h3>
 
     <!-- Loading State for Predictions -->
