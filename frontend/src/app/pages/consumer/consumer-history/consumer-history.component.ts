@@ -33,6 +33,17 @@ export class ConsumerHistoryComponent implements OnInit {
         this.allOrders = data;
         this.filteredOrders = data;
         this.loading = false;
+
+        // Debug: Log order structure to see what fields are available
+        if (data && data.length > 0) {
+          console.log('Sample order data:', data[0]);
+          console.log('Available UUID fields:', {
+            publicUuid: data[0].publicUuid,
+            uuid: data[0].uuid,
+            productId: data[0].productId,
+            id: data[0].id
+          });
+        }
       },
       error: (err) => {
         console.error('Failed to load history', err);
@@ -66,6 +77,25 @@ export class ConsumerHistoryComponent implements OnInit {
         return 'bg-red-100 text-red-700';
       default:
         return 'bg-gray-100 text-gray-700';
+    }
+  }
+
+  showNoTrackingMessage(orderId: string): void {
+    alert(`Tracking information is not available for order #${orderId}. Please contact support for assistance.`);
+  }
+
+  writeReview(order: any): void {
+    // TODO: Implement review modal or navigate to review page
+    console.log('Write review for order:', order);
+    alert(`Review feature coming soon! You can write a review for order #${order.id}`);
+  }
+
+  trackOrder(order: any): void {
+    const uuid = order.publicUuid || order.uuid || order.productId;
+    console.log('Tracking order with UUID:', uuid);
+
+    if (!uuid) {
+      this.showNoTrackingMessage(order.id);
     }
   }
 }

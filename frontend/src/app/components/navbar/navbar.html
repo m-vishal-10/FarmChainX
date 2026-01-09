@@ -22,7 +22,7 @@
         </div>
       </a>
 
-      <div class="hidden md:flex items-center gap-6 text-lg font-bold">
+      <div class="hidden lg:flex items-center gap-6 text-lg font-bold">
         <ng-container *ngIf="!isLoggedIn">
           <a routerLink="/login"
             class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-full font-semibold shadow-xl hover:scale-105 transition text-lg">
@@ -49,6 +49,12 @@
             <a routerLink="/farmer/upload" class="text-gray-200 hover:text-white transition">Upload</a>
             <a routerLink="/farmer/products" class="text-gray-200 hover:text-white transition">My Products</a>
           </ng-container>
+
+          <!-- Role-Based Panel Button -->
+          <a *ngIf="panelConfig && !isAdmin" [routerLink]="panelConfig.route"
+            class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-full font-semibold shadow-xl hover:scale-105 transition text-lg">
+            {{ panelConfig.label }}
+          </a>
 
           <a *ngIf="isAdmin" routerLink="/admin"
             class="bg-gradient-to-r from-green-600 via-pink-600 to-green-600 hover:scale-110 transition text-white px-7 py-3 rounded-full shadow-xl font-bold">
@@ -97,7 +103,7 @@
       </div>
 
       <svg *ngIf="!mobileMenuOpen" (click)="toggleMobileMenu()"
-        class="h-8 w-8 md:hidden text-white cursor-pointer transition" fill="none" stroke="currentColor"
+        class="h-8 w-8 lg:hidden text-white cursor-pointer transition" fill="none" stroke="currentColor"
         stroke-width="2" viewBox="0 0 24 24">
         <line x1="4" y1="6" x2="20" y2="6" />
         <line x1="4" y1="12" x2="20" y2="12" />
@@ -105,7 +111,7 @@
       </svg>
 
       <svg *ngIf="mobileMenuOpen" (click)="toggleMobileMenu()"
-        class="h-8 w-8 md:hidden text-white cursor-pointer transition" fill="none" stroke="currentColor"
+        class="h-8 w-8 lg:hidden text-white cursor-pointer transition" fill="none" stroke="currentColor"
         stroke-width="2" viewBox="0 0 24 24">
         <line x1="6" y1="6" x2="18" y2="18" />
         <line x1="6" y1="18" x2="18" y2="6" />
@@ -113,7 +119,7 @@
     </div>
   </div>
 
-  <div *ngIf="mobileMenuOpen" class="fixed inset-0 z-40 md:hidden">
+  <div *ngIf="mobileMenuOpen" class="fixed inset-0 z-40 lg:hidden">
     <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" (click)="closeMobileMenu()"></div>
 
     <div class="absolute inset-0 flex flex-col transform transition-transform duration-300 animate-slideDown" [ngClass]="{
@@ -194,6 +200,21 @@
             </svg>
             <span class="flex-1">My Products</span>
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+
+          <!-- Role-Based Panel Link -->
+          <a *ngIf="panelConfig && !isAdmin" [routerLink]="panelConfig.route" (click)="closeMobileMenu()"
+            class="flex items-center gap-3 px-4 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="flex-1">{{ panelConfig.label }}</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>

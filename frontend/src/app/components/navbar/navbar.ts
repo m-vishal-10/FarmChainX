@@ -46,6 +46,54 @@ export class Navbar {
     return this.auth.isAdmin();
   }
 
+  get isConsumer() {
+    return this.auth.hasRole('ROLE_CONSUMER');
+  }
+
+  get isDistributor() {
+    return this.auth.hasRole('ROLE_DISTRIBUTOR');
+  }
+
+  get isRetailer() {
+    return this.auth.hasRole('ROLE_RETAILER');
+  }
+
+  get panelConfig() {
+    const role = this.auth.getRole()?.replace('ROLE_', '')?.toUpperCase();
+    
+    const roleMap: {
+      [key: string]: { label: string; route: string; icon: string };
+    } = {
+      ADMIN: {
+        label: 'Admin Panel',
+        route: '/admin',
+        icon: 'admin'
+      },
+      DISTRIBUTOR: {
+        label: 'Distributor Panel',
+        route: '/distributor',
+        icon: 'distributor'
+      },
+      CONSUMER: {
+        label: 'Consumer Panel',
+        route: '/consumer',
+        icon: 'consumer'
+      },
+      RETAILER: {
+        label: 'Retailer Panel',
+        route: '/retailer',
+        icon: 'retailer'
+      },
+      FARMER: {
+        label: 'Farmer Panel',
+        route: '/farmer/dashboard',
+        icon: 'farmer'
+      },
+    };
+
+    return role ? roleMap[role] : null;
+  }
+
   // Detect clicks to close user menu when clicking outside
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
